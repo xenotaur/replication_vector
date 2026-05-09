@@ -17,9 +17,9 @@
 10. `project/memory/decision_log.md`
 
 ## Current Operating Context
-- Current focus is the bootstrap control plane and immediate follow-up preparation.
-- The repository has minimal observed implementation evidence: `README.md`, `LICENSE`, and `.gitignore`.
-- Do not assume package layout, CI, test framework, or exact Velumin consumer configuration already exist.
+- Current focus is the Velumin-compatible infrastructure baseline and the next rendering spike.
+- The repository has root guidance files, canonical scripts, CI, and a minimal Rust/WASM/Vite skeleton.
+- Velumin is consumed through a scripted checkout at `.deps/velumin`; run `scripts/develop` when setup is missing.
 - The intended implementation should consume Velumin as the rendering package/library; do not introduce an alternate rendering stack without an explicit design decision.
 
 ## Execution Constraints
@@ -30,5 +30,6 @@
 
 ## Confidence and Uncertainty
 - High confidence: project identity is Replication Vector / `replication_vector`; the game direction comes from the supplied design summary and README.
-- Medium confidence: initial roadmap phases are useful for sequencing but remain draft until implementation begins.
-- Low confidence: package structure, owner assignments, and precise Velumin consumer/integration shape.
+- High confidence: `DP-0001` adopts the Velumin-style infrastructure and scripted checkout dependency shape.
+- Medium confidence: initial roadmap phases are useful for sequencing but remain draft until gameplay implementation begins.
+- Low confidence: owner assignments and precise gameplay/rendering API usage.

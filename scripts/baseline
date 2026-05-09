@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+MANIFEST="$ROOT/replication_vector/Cargo.toml"
+WEB_DIR="$ROOT/replication_vector/web"
+
+cargo check --manifest-path "$MANIFEST" --target wasm32-unknown-unknown
+wasm-pack build "$ROOT/replication_vector" --target web
+npm run build --prefix "$WEB_DIR"

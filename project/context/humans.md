@@ -22,12 +22,13 @@
 
 ## Current Status Snapshot
 - Health: yellow.
-- Concept direction is strong, but repository implementation evidence is minimal.
-- No source code, tests, scripts, CI, package metadata, or Velumin configuration were observed during bootstrap.
-- The LRH scaffold records intent, constraints, evidence, current status, and immediate follow-up direction.
+- Concept direction and repository infrastructure are established, but gameplay and rendering behavior are not yet implemented.
+- The repository now includes Velumin-style guidance files, canonical scripts, CI, and a minimal Rust/WASM/Vite skeleton.
+- `DP-0001` records the adopted decision to consume Velumin through a scripted checkout at `.deps/velumin`.
 
 ## Known Unknowns
-- Exact Velumin consumer shape: package dependency, local development path, browser harness, packaged game target, and CI integration details.
+- Exact Velumin rendering API usage for the first gameplay-facing scene.
+- Packaged game target beyond the current Rust/WASM/Vite browser harness.
 - Human ownership and review responsibilities.
 - Exact mining interaction, child-probe placement, inheritance rules, launch thresholds, and render-test strategy.
 - Moral/narrative framing of the self-replicating probe.

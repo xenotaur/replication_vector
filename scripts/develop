@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+WEB_DIR="$ROOT/replication_vector/web"
+DEPS_DIR="$ROOT/.deps"
+VELUMIN_DIR="$DEPS_DIR/velumin"
+VELUMIN_URL="${VELUMIN_URL:-https://github.com/xenotaur/Velumin.git}"
+WASM_PACK_VERSION="${WASM_PACK_VERSION:-0.13.1}"
+
+echo "==> Ensuring Rust components and targets"
+rustup component add rustfmt clippy
+rustup target add wasm32-unknown-unknown
+
+echo "==> Ensuring Velumin checkout"
+mkdir -p "$DEPS_DIR"
+if [[ -d "$VELUMIN_DIR/.git" ]]; then
+  git -C "$VELUMIN_DIR" fetch --depth 1 origin main
+  git -C "$VELUMIN_DIR" checkout main
+  git -C "$VELUMIN_DIR" reset --hard origin/main
+else
+  git clone --depth 1 "$VELUMIN_URL" "$VELUMIN_DIR"
+fi
+
+echo "==> Installing npm dependencies"
+if [[ -f "$WEB_DIR/package-lock.json" ]]; then
+  npm ci --prefix "$WEB_DIR"
+else
+  npm install --prefix "$WEB_DIR"
+fi
+
+if command -v wasm-pack >/dev/null 2>&1 && [[ "$(wasm-pack --version)" == "wasm-pack $WASM_PACK_VERSION" ]]; then
+  echo "==> wasm-pack found: $(wasm-pack --version)"
+elif [[ "${CI:-}" == "true" ]]; then
+  echo "==> Installing wasm-pack $WASM_PACK_VERSION for CI"
+  cargo install wasm-pack --version "$WASM_PACK_VERSION" --locked
+else
+  echo "wasm-pack $WASM_PACK_VERSION is required. Install it with: cargo install wasm-pack --version $WASM_PACK_VERSION --locked" >&2
+  exit 1
+fi

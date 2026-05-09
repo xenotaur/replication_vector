@@ -1,0 +1,18 @@
+{
+  "name": "replication-vector-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check:wasm": "cargo check --manifest-path ../Cargo.toml --target wasm32-unknown-unknown",
+    "build:wasm": "wasm-pack build .. --target web",
+    "build": "vite build",
+    "dev": "vite --host 127.0.0.1",
+    "baseline": "npm run check:wasm && npm run build:wasm && npm run build",
+    "test": "npm run baseline"
+  },
+  "dependencies": {
+    "vite": "^6.2.2"
+  },
+  "devDependencies": {}
+}

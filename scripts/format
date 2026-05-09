@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+MANIFEST="$ROOT/replication_vector/Cargo.toml"
+
+check=false
+
+for arg in "$@"; do
+  case "$arg" in
+    --check)
+      check=true
+      ;;
+    --diff)
+      ;;
+    *)
+      echo "Unsupported argument: $arg" >&2
+      exit 2
+      ;;
+  esac
+done
+
+if [[ "$check" == "true" ]]; then
+  cargo fmt --manifest-path "$MANIFEST" --all -- --check
+else
+  cargo fmt --manifest-path "$MANIFEST" --all
+fi

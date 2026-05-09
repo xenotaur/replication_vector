@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Replication Vector</title>
+  <style>
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: #05070a;
+      color: #e8fbff;
+      font-family: system-ui, sans-serif;
+    }
+
+    main {
+      display: grid;
+      min-height: 100vh;
+      place-items: center;
+      padding: 2rem;
+    }
+
+    section {
+      max-width: 34rem;
+    }
+
+    h1 {
+      margin: 0 0 0.5rem;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    p {
+      margin: 0.5rem 0;
+      line-height: 1.5;
+    }
+
+    code {
+      color: #7ff7ff;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <section>
+      <h1>Replication Vector</h1>
+      <p>Velumin consumer bootstrap loaded.</p>
+      <p>Bootstrap vector commands: <code id="command-count">loading</code></p>
+    </section>
+  </main>
+  <script type="module">
+    import init, { replication_vector_bootstrap_command_count } from "@pkg/replication_vector.js";
+
+    const commandCount = document.getElementById("command-count");
+
+    async function run() {
+      await init();
+      commandCount.textContent = String(replication_vector_bootstrap_command_count());
+    }
+
+    run().catch((error) => {
+      console.error(error);
+      commandCount.textContent = error instanceof Error ? error.message : String(error);
+    });
+  </script>
+</body>
+</html>
