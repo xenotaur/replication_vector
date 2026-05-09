@@ -27,10 +27,8 @@
 - The LRH scaffold records intent, constraints, evidence, current status, and immediate follow-up direction.
 
 ## Known Unknowns
-- Runtime platform and package layout.
-- Exact Velumin dependency strategy.
+- Exact Velumin consumer shape: package dependency, local development path, browser harness, packaged game target, and CI integration details.
 - Human ownership and review responsibilities.
-- Whether the first playable version should be desktop Python, browser-based, packaged executable, or another target.
 - Exact mining interaction, child-probe placement, inheritance rules, launch thresholds, and render-test strategy.
 - Moral/narrative framing of the self-replicating probe.
 

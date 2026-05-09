@@ -19,7 +19,8 @@
 ## Current Operating Context
 - Current focus is the bootstrap control plane and immediate follow-up preparation.
 - The repository has minimal observed implementation evidence: `README.md`, `LICENSE`, and `.gitignore`.
-- Do not assume package layout, runtime, CI, test framework, or Velumin dependency configuration already exist.
+- Do not assume package layout, CI, test framework, or exact Velumin consumer configuration already exist.
+- The intended implementation should consume Velumin as the rendering package/library; do not introduce an alternate rendering stack without an explicit design decision.
 
 ## Execution Constraints
 - Keep work narrow and evidence-backed.
@@ -30,4 +31,4 @@
 ## Confidence and Uncertainty
 - High confidence: project identity is Replication Vector / `replication_vector`; the game direction comes from the supplied design summary and README.
 - Medium confidence: initial roadmap phases are useful for sequencing but remain draft until implementation begins.
-- Low confidence: runtime platform, package structure, owner assignments, and precise Velumin integration approach.
+- Low confidence: package structure, owner assignments, and precise Velumin consumer/integration shape.

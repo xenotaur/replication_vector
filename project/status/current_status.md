@@ -34,6 +34,7 @@ health: yellow
 - Velumin integration assumptions remain unvalidated.
 
 ## Recommended Next Actions
-1. Add a minimal package/project skeleton and local developer scripts.
-2. Add Velumin dependency strategy and render a parent probe, asteroid outline, shield arcs, and simple projectile lines.
-3. Add render smoke tests and begin deterministic tests for resource, shield, child-probe, and launch rules.
+1. Adapt Velumin-compatible repository scaffolding where appropriate, including `AGENTS.md`, `STYLE.md`, `REVIEWS.md`, CI, and canonical scripts.
+2. Add a minimal package/project skeleton and Velumin dependency strategy.
+3. Render a parent probe, asteroid outline, shield arcs, and simple projectile lines through Velumin.
+4. Add render smoke tests and begin deterministic tests for resource, shield, child-probe, and launch rules.

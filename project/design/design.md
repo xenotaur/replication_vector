@@ -36,6 +36,7 @@
 ## Current Implementation Boundary
 - Repository evidence currently shows only `README.md`, `LICENSE`, and `.gitignore`.
 - No source package, tests, scripts, CI, Velumin dependency, or runtime implementation were observed during bootstrap.
+- The intended implementation should consume Velumin as the rendering package/library; an alternate rendering stack is out of scope unless accepted through an explicit design decision.
 - The supplied design summary provides rich product direction, but implementation details remain unvalidated until code is added.
 
 ## Future Extensions (Non-binding)
