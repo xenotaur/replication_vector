@@ -45,18 +45,18 @@
   <main>
     <section>
       <h1>Replication Vector</h1>
-      <p>Velumin consumer bootstrap loaded.</p>
-      <p>Bootstrap vector commands: <code id="command-count">loading</code></p>
+      <p>Velumin-facing scene data loaded.</p>
+      <p>Rendering spike vector commands: <code id="command-count">loading</code></p>
     </section>
   </main>
   <script type="module">
-    import init, { replication_vector_bootstrap_command_count } from "@pkg/replication_vector.js";
+    import init, { replication_vector_scene_command_count } from "@pkg/replication_vector.js";
 
     const commandCount = document.getElementById("command-count");
 
     async function run() {
       await init();
-      commandCount.textContent = String(replication_vector_bootstrap_command_count());
+      commandCount.textContent = String(replication_vector_scene_command_count());
     }
 
     run().catch((error) => {

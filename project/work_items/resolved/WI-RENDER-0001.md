@@ -2,13 +2,13 @@
 id: WI-RENDER-0001
 title: Render the first Replication Vector scene through Velumin
 type: deliverable
-status: proposed
+status: resolved
 priority: high
 owner: project maintainers
 created: 2026-08-03
 blocked: false
 blocked_reason: null
-resolution: null
+resolution: Delivered a Replication Vector-owned Velumin VectorCommand scene and documented the Velumin browser-rendering API gap for downstream scene commands.
 ---
 
 # WI-RENDER-0001: Render the First Replication Vector Scene Through Velumin
@@ -35,4 +35,9 @@ Create the smallest rendering spike that proves Replication Vector can render pr
 - The work remains consistent with `FOCUS-RENDER-0001`.
 
 ## Evidence
-- TODO: Add evidence when implementation begins.
+- `project/evidence/EV-0004.md`
+
+## Status
+- Done: `replication_vector/src/lib.rs` owns the first rendering-spike scene as Velumin `VectorCommand` data.
+- Done: focused Rust tests validate the parent probe outline, asteroid outline, shield arc, and projectile line primitives.
+- Gap recorded: Velumin's current browser `WebGPU.render()` method renders Velumin-owned internal scenes and does not expose a public method accepting downstream `VectorCommand` scene data.
