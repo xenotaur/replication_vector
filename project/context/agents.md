@@ -26,7 +26,7 @@
 - Keep work narrow and evidence-backed.
 - Preserve the mine, defend, replicate, and launch loop.
 - Defer broad campaign, tech tree, multiplayer, large content systems, and complex economies until the core loop is proven.
-- Do not treat this derived file as authoritative; it is a summary of `context/humans.md`, which is itself non-authoritative.
+- Do not treat this derived file or `project/context/repository_map.md` as authoritative; they are navigation summaries, not sources of project commitments.
 
 ## Confidence and Uncertainty
 - High confidence: project identity is Replication Vector / `replication_vector`; the game direction comes from the supplied design summary and README.

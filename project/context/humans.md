@@ -35,4 +35,6 @@
 
 ## Notes
 - Derived summary only (non-authoritative).
+- `project/context/repository_map.md` is also derived: use it as a navigation aid,
+  not as a source of project commitments.
 - Authoritative intent lives in `principles/`, `goal/`, `roadmap/`, `design/`, `focus/`, `work_items/`, `guardrails/`, `evidence/`, `status/`, and `memory/`.
