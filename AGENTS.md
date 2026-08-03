@@ -58,7 +58,8 @@ scripts/test
 
 ## Session Start
 
-When beginning a session without `lrh snapshot`, orient using these steps in order:
+When beginning a session without `lrh snapshot`, first read the Source of Truth
+chain above, then orient to the active work using these steps in order:
 
 1. Read `project/focus/current_focus.md` — confirm active scope and exit criteria.
 2. Read `project/work_items/` — identify items that are in-scope, unblocked, and not done.
