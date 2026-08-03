@@ -21,6 +21,7 @@
 - The repository has root guidance files, canonical scripts, CI, and a minimal Rust/WASM/Vite skeleton.
 - Velumin is consumed through a scripted checkout at `.deps/velumin`; run `scripts/develop` when setup is missing.
 - The intended implementation should consume Velumin as the rendering package/library; do not introduce an alternate rendering stack without an explicit design decision.
+- `WI-RENDER-0001` is the proposed next implementation item; move it to `in_progress` only when beginning that rendering spike.
 
 ## Execution Constraints
 - Keep work narrow and evidence-backed.
@@ -31,5 +32,5 @@
 ## Confidence and Uncertainty
 - High confidence: project identity is Replication Vector / `replication_vector`; the game direction comes from the supplied design summary and README.
 - High confidence: `DP-0001` adopts the Velumin-style infrastructure and scripted checkout dependency shape.
-- Medium confidence: initial roadmap phases are useful for sequencing but remain draft until gameplay implementation begins.
+- Medium confidence: Phase 1 rendering-spike sequencing is ready, but precise Velumin rendering API usage remains to be proven.
 - Low confidence: owner assignments and precise gameplay/rendering API usage.

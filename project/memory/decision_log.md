@@ -26,3 +26,25 @@
 
 ### Status
 - Accepted (Bootstrap Phase)
+
+## 2026-08-03: Focus realigned to rendering spike
+
+### Summary
+- Archived the bootstrap focus and made the first Velumin rendering spike the active LRH focus.
+
+### Decisions
+- Created `FOCUS-RENDER-0001` as the active focus.
+- Added `WI-RENDER-0001` as the proposed next implementation work item.
+- Added `WI-CONTROL-0003` and `EV-0003` to record the control-plane housekeeping.
+
+### Rationale
+- The bootstrap and infrastructure scaffolds are complete enough for implementation work to begin.
+- `STATUS-CURRENT` already identified the first Velumin rendering spike as the next recommended action.
+- The next implementation should remain bounded to proving project-owned vector scene data through Velumin before broader gameplay systems.
+
+### Uncertainty / Follow-ups
+- The current Velumin browser renderer may not yet accept external `VectorCommand` scenes directly.
+- `WI-RENDER-0001` should record any Velumin API gap discovered by the spike.
+
+### Status
+- Accepted (Control Plane Housekeeping)

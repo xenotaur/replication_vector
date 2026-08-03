@@ -1,3 +1,16 @@
+---
+id: DP-0000
+title: Replication Vector Game Design Summary
+type: design_proposal
+status: adopted
+created: 2026-05-09
+adopted: 2026-05-09
+implementation_status: partial
+evidence:
+  - EV-0001
+scope: game design direction
+---
+
 # Replication Vector — Project Bootstrap Design Summary
 
 ## Working Title

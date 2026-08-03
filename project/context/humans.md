@@ -10,7 +10,7 @@
 
 ## Goals and Direction
 - Goal: build a tight vector arcade survival game and Velumin downstream validation project.
-- Near-term focus: establish the LRH control plane, then move toward a minimal rendering spike and playable core loop.
+- Near-term focus: prove the first project-owned rendering scene through Velumin, then move toward the playable core loop.
 - Core loop: arrive, mine, defend, allocate matter, build child probe, launch, continue as successor.
 
 ## Design Snapshot
@@ -22,9 +22,10 @@
 
 ## Current Status Snapshot
 - Health: yellow.
-- Concept direction and repository infrastructure are established, but gameplay and rendering behavior are not yet implemented.
+- Concept direction and repository infrastructure are established, and the active focus is now the first Velumin rendering spike.
 - The repository now includes Velumin-style guidance files, canonical scripts, CI, and a minimal Rust/WASM/Vite skeleton.
 - `DP-0001` records the adopted decision to consume Velumin through a scripted checkout at `.deps/velumin`.
+- `WI-RENDER-0001` is the proposed next implementation work item.
 
 ## Known Unknowns
 - Exact Velumin rendering API usage for the first gameplay-facing scene.

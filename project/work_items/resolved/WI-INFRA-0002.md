@@ -1,10 +1,14 @@
 ---
 id: WI-INFRA-0002
 title: Adapt Velumin-style repository infrastructure
-status: done
+type: deliverable
+status: resolved
 priority: high
 owner: project maintainers
 created: 2026-05-09
+blocked: false
+blocked_reason: null
+resolution: Delivered Velumin-style guidance, scripts, CI, a minimal Rust/WASM/Vite skeleton, and adopted proposal DP-0001.
 ---
 
 # WI-INFRA-0002: Adapt Velumin-Style Repository Infrastructure

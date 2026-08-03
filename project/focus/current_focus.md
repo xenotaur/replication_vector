@@ -1,34 +1,33 @@
 ---
-id: FOCUS-BOOTSTRAP
-title: Initial project bootstrap focus
+id: FOCUS-RENDER-0001
+title: Initial Velumin rendering spike
 status: active
 priority: high
 owner: project maintainers
+started: 2026-08-03
 ---
 
 # Current Focus
 
 ## Active Priority
-- Establish an initial LRH control plane with grounded artifacts.
+- Prove the first Replication Vector scene can be expressed through Velumin-facing vector scene data.
 
 ## Why This Appears Current
-- The request is specifically for an LRH `project/` bootstrap.
-- No `project/` directory existed before this scaffold.
-- Repository evidence is minimal: `README.md` identifies "ReplicationVector" as "Mine. Build. Replicate. Replication Vector: a retro space combat game."
-- The supplied design summary recommends creating the repository and seeding its LRH `project/` directory as the immediate next step.
+- `STATUS-CURRENT` identifies the next priority as rendering a parent probe, asteroid outline, shield arcs, and simple projectile lines through Velumin.
+- `DP-0001` adopted the Velumin-style Rust/WASM/Vite skeleton and scripted Velumin checkout.
+- `project/context/repository_map.md` records that Replication Vector can build Velumin `VectorCommand` scenes in Rust, but the browser renderer is not yet wired to render project-owned scenes.
 
 ## Priorities
-1. Preserve the game concept and MVP boundaries in authoritative LRH artifacts.
-2. Record uncertainty where repository implementation evidence is absent.
-3. Keep next work focused on a minimal package/rendering spike before broad gameplay expansion.
+1. Define the smallest Velumin-facing scene data for the rendering spike.
+2. Render or otherwise validate parent probe, asteroid, shield arc, and projectile line primitives through the current Velumin boundary.
+3. Add focused render/build smoke validation without adding gameplay simulation.
 
 ## Non-Goals
-- Do not implement source code, package configuration, scripts, CI, or gameplay systems in this bootstrap.
-- Do not claim that Velumin integration or runtime architecture already exists.
-- Do not expand beyond the standard LRH scaffold in this PR.
+- Do not implement mining, enemies, child-probe construction, progression, scoring, or input handling in this focus.
+- Do not introduce an alternate rendering stack.
+- Do not add release automation, dependency policy gates, or broad visual smoke infrastructure beyond what this spike needs.
 
 ## Exit Criteria
-- Standard LRH bootstrap scaffold exists under `project/`.
-- Goal, design, roadmap, focus, guardrails, evidence, status, and memory artifacts are internally consistent.
-- Human and agent context files are derived from authoritative artifacts.
-- Follow-up work can begin from explicit work items and recorded unknowns.
+- A focused work item for the first rendering spike is accepted or completed.
+- The project has evidence showing whether Velumin can render project-owned scene data directly or which Velumin API gap blocks it.
+- Canonical validation remains green.

@@ -1,10 +1,14 @@
 ---
 id: WI-BOOTSTRAP-0001
 title: Bootstrap LRH project control plane
-status: done
+type: deliverable
+status: resolved
 priority: high
 owner: project maintainers
 created: 2026-05-09
+blocked: false
+blocked_reason: null
+resolution: Delivered the initial standard LRH project-control scaffold under project/, grounded in the supplied design summary and observed repository context.
 ---
 
 # WI-BOOTSTRAP-0001: Bootstrap LRH Project Control Plane
