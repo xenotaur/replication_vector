@@ -21,7 +21,7 @@
 - The repository has root guidance files, canonical scripts, CI, and a minimal Rust/WASM/Vite skeleton.
 - Velumin is consumed through a scripted checkout at `.deps/velumin`; run `scripts/develop` when setup is missing.
 - The intended implementation should consume Velumin as the rendering package/library; do not introduce an alternate rendering stack without an explicit design decision.
-- `WI-RENDER-0001` is the proposed next implementation item; move it to `in_progress` only when beginning that rendering spike.
+- `WI-RENDER-0001` is the proposed next implementation item; move it to `active` only when beginning that rendering spike.
 
 ## Execution Constraints
 - Keep work narrow and evidence-backed.

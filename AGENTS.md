@@ -62,7 +62,7 @@ When beginning a session without `lrh snapshot`, first read the Source of Truth
 chain above, then orient to the active work using these steps in order:
 
 1. Read `project/focus/current_focus.md` — confirm active scope and exit criteria.
-2. Read `project/work_items/` — identify items that are in-scope, unblocked, and not done.
+2. Read `project/work_items/` — identify items that are in-scope, unblocked, and not resolved.
 3. Read `project/status/current_status.md` — note any known risks or blockers.
 4. Select the highest-priority unblocked item and proceed.
 
@@ -76,10 +76,10 @@ field at each transition.
 
 | Transition | Trigger | Agent action |
 |---|---|---|
-| `proposed` → `in_progress` | Item selected, consistent with current focus | Update `status`; note in commit or session |
-| `in_progress` → `done` | Acceptance criteria met, evidence exists | Update `status`; create evidence record |
-| `in_progress` → `blocked` | Dependency or external blocker encountered | Update `status`; note blocking cause |
-| `blocked` → `in_progress` | Blocker resolved | Update `status`; note resolution |
+| `proposed` → `active` | Item selected, consistent with current focus | Update `status`; note in commit or session |
+| `active` → `resolved` | Acceptance criteria met, evidence exists | Update `status`; create evidence record |
+| `active` with `blocked: false` → `active` with `blocked: true` | Dependency or external blocker encountered | Set `blocked`; note `blocked_reason` |
+| `active` with `blocked: true` → `active` with `blocked: false` | Blocker resolved | Clear `blocked_reason`; note resolution |
 
 Keep changes scoped to the work item's acceptance criteria. If useful work is
 discovered outside the current item's scope, propose a new work item rather than
@@ -90,7 +90,7 @@ incorporating it silently.
 Update the LRH control plane when the following triggers are met. Do not update
 it speculatively or to record routine implementation details.
 
-- **Work item done:** update `status` to `done`; create `project/evidence/EV-XXXX.md`
+- **Work item resolved:** update `status` to `resolved`; create `project/evidence/EV-XXXX.md`
   referencing the commit SHA or PR; update `project/status/current_status.md` if
   overall project health has changed.
 - **Non-obvious design or implementation decision:** append to

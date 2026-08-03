@@ -36,6 +36,6 @@ health: yellow
 - The current skeleton proves dependency shape, not rendering gameplay.
 
 ## Recommended Next Actions
-1. Select `WI-RENDER-0001` and move it to `in_progress`.
+1. Select `WI-RENDER-0001` and move it to `active`.
 2. Render a parent probe, asteroid outline, shield arcs, and simple projectile lines through Velumin.
 3. Add render smoke tests around the first rendering spike.

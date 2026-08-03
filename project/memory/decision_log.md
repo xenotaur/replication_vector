@@ -36,11 +36,13 @@
 - Created `FOCUS-RENDER-0001` as the active focus.
 - Added `WI-RENDER-0001` as the proposed next implementation work item.
 - Added `WI-CONTROL-0003` and `EV-0003` to record the control-plane housekeeping.
+- Normalized resolved work items and the generic `project maintainers` contributor record to match the current LRH validator lifecycle schema.
 
 ### Rationale
 - The bootstrap and infrastructure scaffolds are complete enough for implementation work to begin.
 - `STATUS-CURRENT` already identified the first Velumin rendering spike as the next recommended action.
 - The next implementation should remain bounded to proving project-owned vector scene data through Velumin before broader gameplay systems.
+- The owner handle is generic because named maintainers remain unknown, but LRH work item ownership must still resolve to a human contributor record.
 
 ### Uncertainty / Follow-ups
 - The current Velumin browser renderer may not yet accept external `VectorCommand` scenes directly.

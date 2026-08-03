@@ -15,6 +15,10 @@ status: active
 - Future implementation contributors: may add game systems, tests, scripts, CI, and Velumin integration after bootstrap.
 - Future LRH/agent contributors: should follow the authoritative artifact precedence and guardrails before proposing or making changes.
 
+## Frontmatter Identity
+- The `id: project maintainers` frontmatter is a generic owner handle used so current work items can resolve to a human ownership record.
+- This does not identify named maintainers or grant project-specific authority beyond the generic bootstrap owner role.
+
 ## Unknowns
 - Specific human owners, review authorities, and release responsibilities are not identified in repository evidence.
 - TODO: Replace generic owner labels with named maintainers or teams when confirmed.
