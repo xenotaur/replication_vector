@@ -28,6 +28,6 @@ started: 2026-08-03
 - Do not add release automation, dependency policy gates, or broad visual smoke infrastructure beyond what this spike needs.
 
 ## Exit Criteria
-- A focused work item for the first rendering spike is accepted or completed.
+- A focused work item for the first rendering spike is active or resolved.
 - The project has evidence showing whether Velumin can render project-owned scene data directly or which Velumin API gap blocks it.
 - Canonical validation remains green.

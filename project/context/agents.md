@@ -17,7 +17,7 @@
 10. `project/memory/decision_log.md`
 
 ## Current Operating Context
-- Current focus is the Velumin-compatible infrastructure baseline and the next rendering spike.
+- Current focus is the first Velumin rendering spike; the Velumin-compatible infrastructure baseline is established.
 - The repository has root guidance files, canonical scripts, CI, and a minimal Rust/WASM/Vite skeleton.
 - Velumin is consumed through a scripted checkout at `.deps/velumin`; run `scripts/develop` when setup is missing.
 - The intended implementation should consume Velumin as the rendering package/library; do not introduce an alternate rendering stack without an explicit design decision.
