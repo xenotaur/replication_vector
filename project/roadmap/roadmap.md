@@ -7,12 +7,12 @@ owner: project maintainers
 
 # Roadmap
 
-## Phase 0: Project Bootstrap
+## Phase 0: Project Bootstrap (Complete)
 - Add LRH `project/` scaffold.
 - Preserve repository intent and record unknowns.
 - Establish initial goal, design, focus, guardrails, evidence, status, and work item artifacts.
 
-## Phase 1: Rendering Spike
+## Phase 1: Rendering Spike (Active)
 - Add a minimal project/package skeleton.
 - Establish Velumin as an external dependency.
 - Render parent probe, asteroid outlines, shield arcs, bullets, and simple enemy silhouettes.
@@ -45,4 +45,5 @@ owner: project maintainers
 
 ## Notes
 - Phases are seeded from the supplied design summary and are not implementation commitments until converted into focused work items.
-- Current repository evidence does not yet show package layout, runtime platform, CI, or Velumin dependency configuration.
+- `DP-0001` established the Rust/WASM/Vite package shape, CI, scripts, and scripted Velumin checkout.
+- `FOCUS-RENDER-0001` and `WI-RENDER-0001` now bound the first active rendering-spike work.
