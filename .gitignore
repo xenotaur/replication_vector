@@ -28,3 +28,4 @@ target
 **/pkg/
 **/dist/
 **/node_modules/
+**/smoke-out/
