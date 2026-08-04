@@ -8,6 +8,7 @@
     html,
     body {
       margin: 0;
+      height: 100%;
       min-height: 100%;
       background: #05070a;
       color: #e8fbff;
@@ -15,53 +16,62 @@
     }
 
     main {
-      display: grid;
+      display: flex;
+      flex-direction: column;
       min-height: 100vh;
-      place-items: center;
-      padding: 2rem;
+      background: #05070a;
     }
 
-    section {
-      max-width: 34rem;
+    canvas {
+      display: block;
+      width: 100vw;
+      height: 100vh;
+      background: #05070a;
     }
 
-    h1 {
-      margin: 0 0 0.5rem;
-      font-size: 2rem;
-      font-weight: 700;
-    }
-
-    p {
-      margin: 0.5rem 0;
-      line-height: 1.5;
-    }
-
-    code {
+    #status {
+      position: fixed;
+      left: 1rem;
+      bottom: 1rem;
+      max-width: min(28rem, calc(100vw - 2rem));
+      padding: 0.5rem 0.625rem;
+      background: rgb(5 7 10 / 0.78);
       color: #7ff7ff;
+      font-size: 0.875rem;
+      line-height: 1.4;
     }
   </style>
 </head>
 <body>
   <main>
-    <section>
-      <h1>Replication Vector</h1>
-      <p>Velumin-facing scene data loaded.</p>
-      <p>Rendering spike vector commands: <code id="command-count">loading</code></p>
-    </section>
+    <canvas id="scene" width="960" height="540"></canvas>
+    <div id="status" role="status" aria-live="polite">loading</div>
   </main>
   <script type="module">
-    import init, { replication_vector_scene_command_count } from "@pkg/replication_vector.js";
+    import init, {
+      WebGPU,
+      replication_vector_first_scene_frame,
+      replication_vector_scene_command_count,
+    } from "@pkg/replication_vector.js";
 
-    const commandCount = document.getElementById("command-count");
+    const status = document.getElementById("status");
+
+    function renderOrReport(gpu) {
+      const frame = replication_vector_first_scene_frame();
+      gpu.renderFrame(frame);
+      status.textContent = `Velumin rendered ${replication_vector_scene_command_count()} scene commands`;
+    }
 
     async function run() {
       await init();
-      commandCount.textContent = String(replication_vector_scene_command_count());
+      const gpu = await WebGPU.create("scene");
+      renderOrReport(gpu);
+      window.addEventListener("resize", () => renderOrReport(gpu));
     }
 
     run().catch((error) => {
       console.error(error);
-      commandCount.textContent = error instanceof Error ? error.message : String(error);
+      status.textContent = error instanceof Error ? error.message : String(error);
     });
   </script>
 </body>

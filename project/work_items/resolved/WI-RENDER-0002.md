@@ -2,13 +2,13 @@
 id: WI-RENDER-0002
 title: Render the existing scene through Velumin's downstream frame API
 type: deliverable
-status: proposed
+status: resolved
 priority: high
 owner: project maintainers
 created: 2026-08-04
 blocked: false
 blocked_reason: null
-resolution: null
+resolution: Rendered the existing Replication Vector scene through Velumin's downstream frame API in the browser harness.
 ---
 
 # WI-RENDER-0002: Render the Existing Scene Through Velumin's Downstream Frame API
@@ -49,4 +49,10 @@ Wire Replication Vector's existing project-owned scene into Velumin's updated do
 - The work remains consistent with `FOCUS-RENDER-0001`.
 
 ## Evidence
-- TODO: Add evidence when implementation begins.
+- `project/evidence/EV-0005.md`
+
+## Status
+- Done: the local Velumin checkout was updated to the API that exposes `VectorFrame` and `WebGPU.renderFrame(frame)`.
+- Done: Replication Vector exports `replication_vector_first_scene_frame()` for the existing scene.
+- Done: the browser harness creates a Velumin `WebGPU` renderer and submits the project-owned frame via `renderFrame`.
+- Done: local browser verification showed the required scene primitives and `Velumin rendered 4 scene commands` status text.
