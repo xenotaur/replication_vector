@@ -1,5 +1,7 @@
 #[cfg(target_arch = "wasm32")]
 use wasm_bindgen::prelude::*;
+#[cfg(target_arch = "wasm32")]
+use webgpu_vector_lib::VectorFrame;
 use webgpu_vector_lib::{Color, Line, Polyline, StrokeStyle, Vec2, VectorCommand};
 
 const CYAN: Color = Color {
@@ -106,6 +108,58 @@ pub fn first_replication_vector_scene_command_count() -> usize {
 #[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
 pub fn replication_vector_scene_command_count() -> u32 {
     first_replication_vector_scene_command_count() as u32
+}
+
+#[cfg(target_arch = "wasm32")]
+#[wasm_bindgen]
+pub fn replication_vector_first_scene_frame() -> Result<VectorFrame, JsValue> {
+    let mut frame = VectorFrame::new();
+
+    for command in first_replication_vector_scene() {
+        match command {
+            VectorCommand::Line(line) => push_frame_line(&mut frame, &line)?,
+            VectorCommand::Polyline(polyline) => push_frame_polyline(&mut frame, &polyline)?,
+        }
+    }
+
+    Ok(frame)
+}
+
+#[cfg(target_arch = "wasm32")]
+fn push_frame_line(frame: &mut VectorFrame, line: &Line) -> Result<(), JsValue> {
+    let style = line.style;
+    frame.js_line(
+        line.start.x,
+        line.start.y,
+        line.end.x,
+        line.end.y,
+        style.color.red,
+        style.color.green,
+        style.color.blue,
+        style.color.alpha,
+        style.width,
+        style.intensity,
+    )
+}
+
+#[cfg(target_arch = "wasm32")]
+fn push_frame_polyline(frame: &mut VectorFrame, polyline: &Polyline) -> Result<(), JsValue> {
+    let points: Vec<f32> = polyline
+        .points
+        .iter()
+        .flat_map(|point| [point.x, point.y])
+        .collect();
+    let style = polyline.style;
+
+    frame.js_polyline(
+        &points,
+        style.color.red,
+        style.color.green,
+        style.color.blue,
+        style.color.alpha,
+        style.width,
+        style.intensity,
+    )
 }
 
 #[cfg(test)]

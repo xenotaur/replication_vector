@@ -809,6 +809,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b4ac048d71ede7ee76d585517add45da530660ef4390e49b098733c6e897f254"
 
 [[package]]
+name = "velumin-core"
+version = "0.1.0"
+
+[[package]]
 name = "version_check"
 version = "0.9.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -898,6 +902,7 @@ dependencies = [
  "bytemuck",
  "console_error_panic_hook",
  "js-sys",
+ "velumin-core",
  "wasm-bindgen",
  "wasm-bindgen-futures",
  "web-sys",
