@@ -15,6 +15,7 @@ Run scripts from the repository root.
 | `scripts/lint` | Run Clippy for the WASM target with warnings denied. |
 | `scripts/test` | Run Rust tests. |
 | `scripts/baseline` | Rebuild the Rust/WASM/Vite browser baseline. |
+| `scripts/render-smoke` | Build the browser baseline, capture the Velumin-rendered scene, and save local inspection artifacts. |
 | `scripts/validate` | Run the full canonical validation sequence. |
 
 ## Recommended Workflow
@@ -69,3 +70,14 @@ npm run build --prefix replication_vector/web
 ```
 
 Run this when Rust/WASM/Vite build behavior, browser harness behavior, or Velumin integration may be affected.
+
+### `scripts/render-smoke`
+
+Builds the browser baseline, starts the Vite harness, waits for the Velumin-rendered first scene status, and saves:
+
+```text
+replication_vector/web/smoke-out/first-scene.png
+replication_vector/web/smoke-out/first-scene.json
+```
+
+This command is opt-in and is not part of `scripts/validate`. It requires a WebGPU-capable Chromium through Playwright; if Chromium is missing, run `npx playwright install chromium` from `replication_vector/web`. If the browser environment lacks WebGPU support, the command prints a clear `SKIP` message rather than writing a misleading capture. Generated `smoke-out/` artifacts are ignored by git.

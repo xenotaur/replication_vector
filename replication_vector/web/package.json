@@ -9,10 +9,13 @@
     "build": "vite build",
     "dev": "vite --host 127.0.0.1",
     "baseline": "npm run check:wasm && npm run build:wasm && npm run build",
+    "render-smoke": "node render-smoke.mjs",
     "test": "npm run baseline"
   },
   "dependencies": {
     "vite": "^6.2.2"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "playwright": "^1.62.0"
+  }
 }

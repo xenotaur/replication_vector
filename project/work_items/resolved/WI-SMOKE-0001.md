@@ -2,13 +2,13 @@
 id: WI-SMOKE-0001
 title: Add opt-in render smoke artifact capture
 type: deliverable
-status: proposed
+status: resolved
 priority: medium
 owner: project maintainers
 created: 2026-08-04
 blocked: false
 blocked_reason: null
-resolution: null
+resolution: Added an opt-in `scripts/render-smoke` command that saves ignored PNG and JSON artifacts for the Velumin-rendered first scene; verified locally in EV-0006.
 ---
 
 # WI-SMOKE-0001: Add Opt-In Render Smoke Artifact Capture
@@ -47,4 +47,4 @@ Create a local, opt-in render smoke command that saves an inspectable screenshot
 - Canonical validation remains green.
 
 ## Evidence
-- TODO: Add evidence when implementation begins.
+- `EV-0006` records the implemented command, artifact paths, metadata, and local successful capture.
