@@ -12,6 +12,7 @@ health: yellow
 - Replication Vector is entering its first rendering-spike stage.
 - The repository now has an LRH control-plane scaffold, Velumin-style guidance, canonical validation scripts, CI, and a minimal Rust/WASM/Vite skeleton.
 - The first project-owned scene is now expressed as Velumin `VectorCommand` data and validated by focused Rust tests.
+- The updated Velumin API appears to provide a downstream browser frame path via `VectorFrame` and `WebGPU.renderFrame(frame)`.
 - The game concept is well described by the supplied design summary and lightly corroborated by `README.md`.
 
 ## Evidence Basis
@@ -27,16 +28,16 @@ health: yellow
 
 ## Active Priorities
 - Keep validation aligned with the Velumin-compatible script contract.
-- Resolve the Velumin downstream-rendering API gap before expanding rendering or gameplay scope.
+- Execute `WI-RENDER-0002`: render the existing project-owned scene through Velumin's downstream frame API before expanding rendering or gameplay scope.
 
 ## Risks
 - Scope creep into campaign, tech tree, and content systems before the core loop is proven.
 - Passive player feel if the heavy probe lacks frequent tactical actions.
 - Visual clutter from vector shields, asteroids, beams, particles, projectiles, enemies, and UI.
 - Velumin checkout and npm setup can fail in fresh environments until `scripts/develop` succeeds.
-- The current Replication Vector scene proves Velumin command-data construction, but direct browser rendering of downstream-owned scene commands is not exposed by the current Velumin API.
+- Replication Vector has not yet proven that the updated Velumin downstream frame API renders the project-owned scene in its own browser harness.
 
 ## Recommended Next Actions
-1. Add or request an upstream Velumin API that lets downstream consumers submit `VectorCommand` scenes to the browser renderer.
-2. Once that API exists, wire the existing Replication Vector scene into the Velumin browser renderer without introducing an alternate rendering stack.
-3. Keep broader gameplay systems blocked until the rendering path can show project-owned scene data honestly.
+1. Select `WI-RENDER-0002` and move it to `active`.
+2. Update the local Velumin checkout/dependency path to the API that includes `VectorFrame` and `WebGPU.renderFrame(frame)`.
+3. Wire the existing Replication Vector scene into the Velumin browser renderer without introducing an alternate rendering stack.
