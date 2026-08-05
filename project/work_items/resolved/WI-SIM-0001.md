@@ -2,13 +2,13 @@
 id: WI-SIM-0001
 title: Add deterministic parent-probe movement and rotation model
 type: deliverable
-status: proposed
+status: resolved
 priority: high
 owner: project maintainers
 created: 2026-08-05
 blocked: false
 blocked_reason: null
-resolution: null
+resolution: Added a deterministic Rust parent-probe motion model with focused tests for thrust, turn, drag, caps, heading normalization, and fixed-step repeatability; verified in EV-0007.
 ---
 
 # WI-SIM-0001: Add Deterministic Parent-Probe Movement and Rotation Model
@@ -103,8 +103,8 @@ Also run:
 Run `scripts/baseline` only if the implementation touches WASM exports, browser harness behavior, or build output.
 
 ## Open Questions
-- Should the first implementation clamp negative thrust to zero, or allow weak reverse thrust through configuration? This work item requires the implementation to choose and document one behavior.
-- Should the first motion model use a standalone vector helper local to Replication Vector, or should future work seek a shared type boundary with Velumin? This item should keep the choice local and minimal unless existing code already provides an obvious type.
+- Should the first implementation clamp negative thrust to zero, or allow weak reverse thrust through configuration? Resolved for this slice: negative thrust is clamped to zero.
+- Should the first motion model use a standalone vector helper local to Replication Vector, or should future work seek a shared type boundary with Velumin? Resolved for this slice: the model uses a local `SimVec2`.
 
 ## Evidence
-- TODO: Add evidence when implementation begins.
+- `EV-0007` records the implemented motion model and validation results.

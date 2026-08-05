@@ -4,6 +4,8 @@ use wasm_bindgen::prelude::*;
 use webgpu_vector_lib::VectorFrame;
 use webgpu_vector_lib::{Color, Line, Polyline, StrokeStyle, Vec2, VectorCommand};
 
+pub mod simulation;
+
 const CYAN: Color = Color {
     red: 0.2,
     green: 0.95,
