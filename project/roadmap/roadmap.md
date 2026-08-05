@@ -12,13 +12,13 @@ owner: project maintainers
 - Preserve repository intent and record unknowns.
 - Establish initial goal, design, focus, guardrails, evidence, status, and work item artifacts.
 
-## Phase 1: Rendering Spike (Active)
+## Phase 1: Rendering Spike (Initial Scene Complete)
 - Add a minimal project/package skeleton.
 - Establish Velumin as an external dependency.
-- Render parent probe, asteroid outlines, shield arcs, bullets, and simple enemy silhouettes.
+- Render parent probe, asteroid outlines, shield arcs, and bullets for the first scene.
 - Add render smoke tests.
 
-## Phase 2: Core Simulation
+## Phase 2: Core Simulation (Active)
 - Implement slow inertial movement and rotation.
 - Implement mining beam and one primary matter resource.
 - Implement shield construction, damage, and repair.
@@ -46,4 +46,6 @@ owner: project maintainers
 ## Notes
 - Phases are seeded from the supplied design summary and are not implementation commitments until converted into focused work items.
 - `DP-0001` established the Rust/WASM/Vite package shape, CI, scripts, and scripted Velumin checkout.
-- `FOCUS-RENDER-0001` and `WI-RENDER-0001` now bound the first active rendering-spike work.
+- `FOCUS-RENDER-0001` completed the first Velumin-rendered scene and opt-in render smoke artifact path.
+- `FOCUS-SIM-0001` and `WI-SIM-0001` now bind the first active core simulation slice.
+- Simple enemy silhouettes remain deferred until enemy pressure or a future explicit rendering work item is selected.
