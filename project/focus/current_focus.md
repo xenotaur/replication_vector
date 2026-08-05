@@ -1,33 +1,36 @@
 ---
-id: FOCUS-RENDER-0001
-title: Initial Velumin rendering spike
+id: FOCUS-SIM-0001
+title: Initial deterministic parent-probe simulation
 status: active
 priority: high
 owner: project maintainers
-started: 2026-08-03
+started: 2026-08-05
 ---
 
 # Current Focus
 
 ## Active Priority
-- Prove the first Replication Vector scene can be expressed through Velumin-facing vector scene data.
+- Prove Replication Vector has a deterministic Rust simulation model for slow parent-probe movement and rotation.
 
 ## Why This Appears Current
-- `STATUS-CURRENT` identifies the next priority as rendering a parent probe, asteroid outline, shield arcs, and simple projectile lines through Velumin.
-- `DP-0001` adopted the Velumin-style Rust/WASM/Vite skeleton and scripted Velumin checkout.
-- `project/context/repository_map.md` records that Replication Vector can build Velumin `VectorCommand` scenes in Rust, but the browser renderer is not yet wired to render project-owned scenes.
+- `FOCUS-RENDER-0001` is complete: the first project-owned scene is expressed as Velumin command data, rendered through Velumin's downstream browser frame API, and capturable through an opt-in smoke artifact command.
+- `ROADMAP-INITIAL` lists Phase 2 Core Simulation after the rendering spike, beginning with slow inertial movement and rotation.
+- `DP-0003` proposes a narrow deterministic parent-probe motion model.
+- `WI-SIM-0001` is proposed and prompt-ready for the first core simulation slice.
 
 ## Priorities
-1. Define the smallest Velumin-facing scene data for the rendering spike.
-2. Render or otherwise validate parent probe, asteroid, shield arc, and projectile line primitives through the current Velumin boundary.
-3. Add focused render/build smoke validation without adding gameplay simulation.
+1. Execute `WI-SIM-0001`.
+2. Keep the motion model deterministic, Rust-only, and covered by focused unit tests.
+3. Preserve the existing static Velumin render harness while simulation behavior is proven.
 
 ## Non-Goals
-- Do not implement mining, enemies, child-probe construction, progression, scoring, or input handling in this focus.
-- Do not introduce an alternate rendering stack.
-- Do not add release automation, dependency policy gates, or broad visual smoke infrastructure beyond what this spike needs.
+- Do not add browser keyboard, pointer, controller, or input loops in this focus.
+- Do not connect simulation state to rendering yet.
+- Do not implement mining, matter resources, shield construction, collision, parent integrity, enemies, child-probe construction, launch sequence, scoring, progression, or UI.
+- Do not introduce a physics engine or broad simulation architecture.
+- Do not change Velumin.
 
 ## Exit Criteria
-- A focused work item for the first rendering spike is active or resolved.
-- The project has evidence showing whether Velumin can render project-owned scene data directly or which Velumin API gap blocks it.
+- `WI-SIM-0001` is resolved.
+- Evidence records whether the deterministic parent-probe movement and rotation model was implemented and validated.
 - Canonical validation remains green.
