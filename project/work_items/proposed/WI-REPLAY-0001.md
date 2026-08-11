@@ -9,7 +9,8 @@ created: 2026-08-07
 blocked: false
 blocked_reason: null
 resolution: null
-related_focus: []
+related_focus:
+  - FOCUS-REPLAY-0001
 related_roadmap:
   - ROADMAP-INITIAL
 related_workstreams: []
@@ -60,13 +61,13 @@ artifacts_expected:
 Render a fixed deterministic parent-probe motion replay through the existing Rust/WASM/Velumin browser path and save inspectable PNG/JSON artifacts for maintainers.
 
 ## Problem / Context
-`WI-SIM-0001` added a deterministic Rust parent-probe motion model, but its output is not yet discoverable in the browser or artifact capture path. The existing render smoke path captures the static first scene, so a narrow replay artifact is the smallest next step for showing current simulation state without opening mining or gameplay design. This work should execute only after the current focus is replaced with a motion replay focus such as `FOCUS-REPLAY-0001`.
+`WI-SIM-0001` added a deterministic Rust parent-probe motion model, but its output is not yet discoverable in the browser or artifact capture path. The existing render smoke path captures the static first scene, so a narrow replay artifact is the smallest next step for showing current simulation state without opening mining or gameplay design. `FOCUS-REPLAY-0001` authorizes this motion replay scope.
 
 ### Duplication search
 - In-repo: Related, not duplicate: `WI-SMOKE-0001` captures static Velumin screenshots; `WI-SIM-0001` implements motion without rendering.
 - Sibling repos: None identified.
 - External libraries: None identified; use the existing Rust/WASM/Vite/Velumin/Playwright path.
-- Recommendation: Proceed after focus authorization.
+- Recommendation: Proceed under `FOCUS-REPLAY-0001`.
 
 ### Demand search
 - Work items: None found.
@@ -120,4 +121,4 @@ Render a fixed deterministic parent-probe motion replay through the existing Rus
 - Browser/WebGPU support may skip capture in some local environments; the command should report a clear skip rather than false success.
 - Video capture is intentionally deferred because PNG/JSON artifacts are smaller and match the existing smoke pattern.
 - Rendering a replay frame can drift into gameplay input or UI if not kept to a fixed scripted sequence.
-- The work should not begin until a motion replay focus authorizes simulation-to-rendering integration.
+- `FOCUS-REPLAY-0001` authorizes this replay scope; keep implementation inside that focus.

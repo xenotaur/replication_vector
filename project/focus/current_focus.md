@@ -1,36 +1,39 @@
 ---
-id: FOCUS-SIM-0001
-title: Initial deterministic parent-probe simulation
+id: FOCUS-REPLAY-0001
+title: Deterministic parent-probe motion replay evidence
 status: active
 priority: high
 owner: project maintainers
-started: 2026-08-05
+started: 2026-08-11
 ---
 
 # Current Focus
 
 ## Active Priority
-- Prove Replication Vector has a deterministic Rust simulation model for slow parent-probe movement and rotation.
+- Prove Replication Vector can replay deterministic parent-probe motion through Velumin and save inspectable PNG/JSON capture artifacts.
 
 ## Why This Appears Current
-- `FOCUS-RENDER-0001` is complete: the first project-owned scene is expressed as Velumin command data, rendered through Velumin's downstream browser frame API, and capturable through an opt-in smoke artifact command.
-- `ROADMAP-INITIAL` lists Phase 2 Core Simulation after the rendering spike, beginning with slow inertial movement and rotation.
-- `DP-0003` proposes a narrow deterministic parent-probe motion model.
-- `WI-SIM-0001` is proposed and prompt-ready for the first core simulation slice.
+- `FOCUS-SIM-0001` is complete: `WI-SIM-0001` resolved the first deterministic parent-probe motion model and `EV-0007` records the validation evidence.
+- The existing Velumin browser harness and smoke artifact path can already save inspectable PNG/JSON output for a static scene.
+- `WI-REPLAY-0001` is proposed and prompt-ready for the narrow depth-first replay artifact slice.
+- Mining design remains deferred while maintainers prioritize discoverability of current deterministic motion state.
 
 ## Priorities
-1. Execute `WI-SIM-0001`.
-2. Keep the motion model deterministic, Rust-only, and covered by focused unit tests.
-3. Preserve the existing static Velumin render harness while simulation behavior is proven.
+1. Execute `WI-REPLAY-0001`.
+2. Keep the replay fixed, scripted, deterministic, and sourced from the Rust simulation model.
+3. Render replay-derived parent-probe pose through Velumin's browser harness.
+4. Save inspectable local PNG/JSON artifacts without turning the capture into a broad visual regression gate.
 
 ## Non-Goals
 - Do not add browser keyboard, pointer, controller, or input loops in this focus.
-- Do not connect simulation state to rendering yet.
 - Do not implement mining, matter resources, shield construction, collision, parent integrity, enemies, child-probe construction, launch sequence, scoring, progression, or UI.
-- Do not introduce a physics engine or broad simulation architecture.
-- Do not change Velumin.
+- Do not add live gameplay loops or player-controlled motion.
+- Do not add broad visual regression infrastructure, committed golden screenshots, or mandatory CI visual gates.
+- Do not replace Velumin with an alternate rendering stack.
+- Do not change Velumin unless a real API blocker is discovered and documented.
 
 ## Exit Criteria
-- `WI-SIM-0001` is resolved.
-- Evidence records whether the deterministic parent-probe movement and rotation model was implemented and validated.
-- Canonical validation remains green.
+- `WI-REPLAY-0001` is resolved.
+- Evidence records whether deterministic parent-probe motion replay rendered through Velumin and saved inspectable PNG/JSON artifacts, or records the precise blocker.
+- Documentation identifies how to run the replay capture command and where to inspect generated artifacts.
+- Canonical validation and LRH validation remain green.
