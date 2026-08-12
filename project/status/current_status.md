@@ -16,8 +16,8 @@ health: yellow
 - Replication Vector now renders the existing project-owned scene through Velumin's downstream `renderFrame` browser harness.
 - A local opt-in render smoke command now saves inspectable PNG and JSON artifacts for the Velumin-rendered first scene.
 - The first deterministic Rust parent-probe motion model now exists with focused tests.
-- `FOCUS-REPLAY-0001` now authorizes deterministic parent-probe motion replay through Velumin with inspectable PNG/JSON capture artifacts.
-- `WI-REPLAY-0001` is active to connect that deterministic motion model to the Velumin browser harness and local replay artifact capture.
+- `FOCUS-REPLAY-0001` authorized deterministic parent-probe motion replay through Velumin with inspectable PNG/JSON capture artifacts.
+- `WI-REPLAY-0001` is resolved: the deterministic motion model now renders through the Velumin browser harness and saves local replay artifacts.
 - The game concept is well described by the supplied design summary and lightly corroborated by `README.md`.
 
 ## Evidence Basis
@@ -34,11 +34,11 @@ health: yellow
 - `DP-0003` proposes the first deterministic parent-probe motion model.
 
 ## Current Health
-- Yellow: strong concept/design direction, repository infrastructure, the first Velumin-rendered scene, an opt-in local render artifact path, the first deterministic motion model, and an active replay artifact slice exist, but no playable input, mining, shield, enemy, child-probe, or launch loop exists yet.
+- Yellow: strong concept/design direction, repository infrastructure, the first Velumin-rendered scene, an opt-in local render artifact path, the first deterministic motion model, and a replay artifact path exist, but no playable input, mining, shield, enemy, child-probe, or launch loop exists yet.
 
 ## Active Priorities
 - Keep validation aligned with the Velumin-compatible script contract.
-- Complete and land `WI-REPLAY-0001` to render deterministic parent-probe motion through Velumin and save inspectable replay artifacts.
+- Select the next narrow focus or work item before expanding into player input, mining, shields, enemies, or child-probe behavior.
 - Keep the replay fixed, scripted, deterministic, and sourced from the Rust simulation model.
 
 ## Risks
@@ -49,6 +49,6 @@ health: yellow
 - Current browser verification is a focused opt-in artifact capture, not a recurring visual regression gate.
 
 ## Recommended Next Actions
-1. Complete and land `WI-REPLAY-0001` under `FOCUS-REPLAY-0001`.
+1. Close or replace `FOCUS-REPLAY-0001`, whose exit criteria are satisfied by `WI-REPLAY-0001`.
 2. Do not expand into player input, mining, shields, enemies, or child-probe behavior until a future focus and work item explicitly authorize that scope.
 3. Keep broader gameplay systems blocked until future explicit work items authorize them.
