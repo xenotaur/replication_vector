@@ -2,7 +2,7 @@
 id: WI-REPLAY-0001
 title: Render deterministic parent-probe motion replay artifacts
 type: deliverable
-status: proposed
+status: active
 priority: high
 owner: project maintainers
 created: 2026-08-07
@@ -50,7 +50,8 @@ artifacts_expected:
   - replication_vector/src/lib.rs
   - replication_vector/src/simulation.rs
   - replication_vector/web/index.html
-  - replication_vector/web/render-smoke.mjs or a sibling smoke command
+  - replication_vector/web/render-smoke.mjs
+  - scripts/render-replay-smoke
   - scripts/README.md
   - project/evidence/EV-XXXX.md
 ---

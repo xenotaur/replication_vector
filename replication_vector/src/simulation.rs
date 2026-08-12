@@ -106,6 +106,22 @@ pub struct ParentProbeMotionConfig {
     pub max_angular_speed: f32,
 }
 
+#[derive(Clone, Debug, PartialEq)]
+pub struct ParentProbeReplaySample {
+    pub step_index: u32,
+    pub elapsed_seconds: f32,
+    pub input: ParentProbeMotionInput,
+    pub state: ParentProbeState,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct ParentProbeReplay {
+    pub delta_seconds: f32,
+    pub total_steps: u32,
+    pub samples: Vec<ParentProbeReplaySample>,
+    pub final_state: ParentProbeState,
+}
+
 impl Default for ParentProbeMotionConfig {
     fn default() -> Self {
         Self {
@@ -116,6 +132,54 @@ impl Default for ParentProbeMotionConfig {
             max_speed: 1.5,
             max_angular_speed: PI,
         }
+    }
+}
+
+pub fn deterministic_parent_probe_replay() -> ParentProbeReplay {
+    const DELTA_SECONDS: f32 = 1.0 / 30.0;
+    const STEPS_PER_INPUT: u32 = 12;
+    const SCRIPTED_INPUTS: [ParentProbeMotionInput; 4] = [
+        ParentProbeMotionInput {
+            thrust: 1.0,
+            turn: 0.35,
+        },
+        ParentProbeMotionInput {
+            thrust: 0.85,
+            turn: -0.2,
+        },
+        ParentProbeMotionInput {
+            thrust: 0.35,
+            turn: 0.0,
+        },
+        ParentProbeMotionInput {
+            thrust: 0.0,
+            turn: 0.0,
+        },
+    ];
+
+    let config = ParentProbeMotionConfig::default();
+    let mut state = ParentProbeState::default();
+    let mut samples = Vec::with_capacity(SCRIPTED_INPUTS.len() * STEPS_PER_INPUT as usize);
+    let mut step_index = 0;
+
+    for input in SCRIPTED_INPUTS {
+        for _ in 0..STEPS_PER_INPUT {
+            step_index += 1;
+            state = step_parent_probe_motion(state, input, config, DELTA_SECONDS);
+            samples.push(ParentProbeReplaySample {
+                step_index,
+                elapsed_seconds: step_index as f32 * DELTA_SECONDS,
+                input,
+                state,
+            });
+        }
+    }
+
+    ParentProbeReplay {
+        delta_seconds: DELTA_SECONDS,
+        total_steps: step_index,
+        samples,
+        final_state: state,
     }
 }
 
@@ -348,6 +412,25 @@ mod tests {
             .fold(ParentProbeState::default(), |state, input| {
                 step_parent_probe_motion(state, *input, config, 1.0 / 30.0)
             });
+
+        assert_eq!(first, second);
+    }
+
+    #[test]
+    fn deterministic_replay_records_final_state_from_motion_model() {
+        let replay = deterministic_parent_probe_replay();
+
+        assert_eq!(replay.total_steps, 48);
+        assert_eq!(replay.samples.len(), replay.total_steps as usize);
+        assert_eq!(replay.samples.last().unwrap().state, replay.final_state);
+        assert!(replay.final_state.position.x > 0.1);
+        assert!(replay.final_state.heading_radians > 0.0);
+    }
+
+    #[test]
+    fn deterministic_replay_is_stable_across_runs() {
+        let first = deterministic_parent_probe_replay();
+        let second = deterministic_parent_probe_replay();
 
         assert_eq!(first, second);
     }

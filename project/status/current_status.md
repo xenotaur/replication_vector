@@ -17,6 +17,7 @@ health: yellow
 - A local opt-in render smoke command now saves inspectable PNG and JSON artifacts for the Velumin-rendered first scene.
 - The first deterministic Rust parent-probe motion model now exists with focused tests.
 - `FOCUS-REPLAY-0001` now authorizes deterministic parent-probe motion replay through Velumin with inspectable PNG/JSON capture artifacts.
+- `WI-REPLAY-0001` is active to connect that deterministic motion model to the Velumin browser harness and local replay artifact capture.
 - The game concept is well described by the supplied design summary and lightly corroborated by `README.md`.
 
 ## Evidence Basis
@@ -28,15 +29,16 @@ health: yellow
 - `EV-0005` records the Replication Vector integration with Velumin's downstream frame API.
 - `EV-0006` records the opt-in render smoke artifact command and successful local capture.
 - `EV-0007` records the deterministic parent-probe motion model and focused test coverage.
+- `EV-0008` records the deterministic parent-probe replay artifact path.
 - `DP-0001` records the adopted decision to use a scripted Velumin checkout and minimal Rust/WASM/Vite skeleton.
 - `DP-0003` proposes the first deterministic parent-probe motion model.
 
 ## Current Health
-- Yellow: strong concept/design direction, repository infrastructure, the first Velumin-rendered scene, an opt-in local render artifact path, and the first deterministic motion model exist, but the motion model has not yet been replayed through Velumin and no playable input, mining, shield, enemy, child-probe, or launch loop exists yet.
+- Yellow: strong concept/design direction, repository infrastructure, the first Velumin-rendered scene, an opt-in local render artifact path, the first deterministic motion model, and an active replay artifact slice exist, but no playable input, mining, shield, enemy, child-probe, or launch loop exists yet.
 
 ## Active Priorities
 - Keep validation aligned with the Velumin-compatible script contract.
-- Execute `WI-REPLAY-0001` to render deterministic parent-probe motion through Velumin and save inspectable replay artifacts.
+- Complete and land `WI-REPLAY-0001` to render deterministic parent-probe motion through Velumin and save inspectable replay artifacts.
 - Keep the replay fixed, scripted, deterministic, and sourced from the Rust simulation model.
 
 ## Risks
@@ -47,6 +49,6 @@ health: yellow
 - Current browser verification is a focused opt-in artifact capture, not a recurring visual regression gate.
 
 ## Recommended Next Actions
-1. Execute `WI-REPLAY-0001` under `FOCUS-REPLAY-0001`.
+1. Complete and land `WI-REPLAY-0001` under `FOCUS-REPLAY-0001`.
 2. Do not expand into player input, mining, shields, enemies, or child-probe behavior until a future focus and work item explicitly authorize that scope.
 3. Keep broader gameplay systems blocked until future explicit work items authorize them.

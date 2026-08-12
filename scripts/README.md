@@ -16,6 +16,7 @@ Run scripts from the repository root.
 | `scripts/test` | Run Rust tests. |
 | `scripts/baseline` | Rebuild the Rust/WASM/Vite browser baseline. |
 | `scripts/render-smoke` | Build the browser baseline, capture the Velumin-rendered scene, and save local inspection artifacts. |
+| `scripts/render-replay-smoke` | Build the browser baseline, capture the deterministic parent-probe replay, and save local inspection artifacts. |
 | `scripts/validate` | Run the full canonical validation sequence. |
 
 ## Recommended Workflow
@@ -81,3 +82,14 @@ replication_vector/web/smoke-out/first-scene.json
 ```
 
 This command is opt-in and is not part of `scripts/validate`. It requires a WebGPU-capable Chromium through Playwright; if Chromium is missing, run `npx playwright install chromium` from `replication_vector/web`. If the browser environment lacks WebGPU support, the command prints a clear `SKIP` message rather than writing a misleading capture. Generated `smoke-out/` artifacts are ignored by git.
+
+### `scripts/render-replay-smoke`
+
+Builds the browser baseline, starts the Vite harness with `?scene=replay`, waits for the Velumin-rendered deterministic parent-probe replay status, and saves:
+
+```text
+replication_vector/web/smoke-out/replay.png
+replication_vector/web/smoke-out/replay.json
+```
+
+The replay uses the Rust `step_parent_probe_motion(...)` model through a fixed scripted sequence and writes JSON metadata next to the PNG, including the captured replay step, timestep, final parent-probe state, command count, viewport, Velumin checkout, and artifact path. Like `scripts/render-smoke`, this command is opt-in, writes only ignored local artifacts, and reports a clear `SKIP` when Playwright Chromium or WebGPU support is unavailable.
