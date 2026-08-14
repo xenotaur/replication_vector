@@ -7,12 +7,14 @@ import { chromium } from "playwright";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(HERE, "../..");
 const OUT = resolve(HERE, "smoke-out");
-const ARTIFACT = resolve(OUT, "first-scene.png");
-const METADATA = resolve(OUT, "first-scene.json");
+const SCENE = process.env.SMOKE_SCENE === "replay" ? "replay" : "first-scene";
+const ARTIFACT = resolve(OUT, `${SCENE}.png`);
+const METADATA = resolve(OUT, `${SCENE}.json`);
 const PORT = process.env.SMOKE_PORT || "5173";
 const BASE = (process.env.SMOKE_URL || `http://127.0.0.1:${PORT}`).replace(/\/$/, "");
+const TARGET_URL = SCENE === "replay" ? `${BASE}/?scene=replay` : BASE;
 const VIEWPORT = { width: 1024, height: 768 };
-const READY_TEXT = "Velumin rendered 4 scene commands";
+const READY_TEXT = SCENE === "replay" ? "Velumin rendered 4 replay commands" : "Velumin rendered 4 scene commands";
 const READY_TIMEOUT_MS = 15000;
 
 const LAUNCH_ARGS = [
@@ -56,7 +58,7 @@ async function waitForServer(page) {
 
   while (Date.now() - started < READY_TIMEOUT_MS) {
     try {
-      await page.goto(BASE, { waitUntil: "domcontentloaded", timeout: 2000 });
+      await page.goto(TARGET_URL, { waitUntil: "domcontentloaded", timeout: 2000 });
       return;
     } catch (error) {
       lastError = error;
@@ -105,11 +107,18 @@ async function capture(browser) {
     await mkdir(OUT, { recursive: true });
     await page.locator("#scene").screenshot({ path: ARTIFACT });
 
+    const render = await page.evaluate(() => window.replicationVectorLastRender);
+    if (!render) {
+      throw new Error("browser did not expose replicationVectorLastRender metadata");
+    }
+
     const metadata = {
       artifact: ARTIFACT,
-      commandCount: 4,
+      commandCount: render.commandCount,
+      replay: render.replay,
+      scene: render.scene,
       status,
-      url: BASE,
+      url: TARGET_URL,
       viewport: VIEWPORT,
       veluminCommit: commandOutput("git", ["-C", resolve(ROOT, ".deps/velumin"), "rev-parse", "--short", "HEAD"], "unknown"),
       capturedAt: new Date().toISOString(),

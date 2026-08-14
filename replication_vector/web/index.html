@@ -51,15 +51,33 @@
     import init, {
       WebGPU,
       replication_vector_first_scene_frame,
+      replication_vector_replay_command_count,
+      replication_vector_replay_frame,
+      replication_vector_replay_metadata_json,
       replication_vector_scene_command_count,
     } from "@pkg/replication_vector.js";
 
     const status = document.getElementById("status");
+    const params = new URLSearchParams(window.location.search);
+    const scene = params.get("scene") === "replay" ? "replay" : "first-scene";
 
     function renderOrReport(gpu) {
-      const frame = replication_vector_first_scene_frame();
+      const frame =
+        scene === "replay" ? replication_vector_replay_frame() : replication_vector_first_scene_frame();
+      const commandCount =
+        scene === "replay" ? replication_vector_replay_command_count() : replication_vector_scene_command_count();
+      const replay = scene === "replay" ? JSON.parse(replication_vector_replay_metadata_json()) : null;
+
       gpu.renderFrame(frame);
-      status.textContent = `Velumin rendered ${replication_vector_scene_command_count()} scene commands`;
+      status.textContent =
+        scene === "replay"
+          ? `Velumin rendered ${commandCount} replay commands`
+          : `Velumin rendered ${commandCount} scene commands`;
+      window.replicationVectorLastRender = {
+        commandCount,
+        replay,
+        scene,
+      };
     }
 
     async function run() {
