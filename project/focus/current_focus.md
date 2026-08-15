@@ -1,39 +1,40 @@
 ---
-id: FOCUS-REPLAY-0001
-title: Deterministic parent-probe motion replay evidence
+id: FOCUS-INTERACT-0001
+title: Controllable parent-probe tuning sandbox
 status: active
 priority: high
 owner: project maintainers
-started: 2026-08-11
+started: 2026-08-14
 ---
 
 # Current Focus
 
 ## Active Priority
-- Prove Replication Vector can replay deterministic parent-probe motion through Velumin and save inspectable PNG/JSON capture artifacts.
+- Prove Replication Vector can expose a controllable browser sandbox for tuning slow, heavy parent-probe thrust and rotation through the existing Rust simulation model and Velumin render path.
 
 ## Why This Appears Current
-- `FOCUS-SIM-0001` is complete: `WI-SIM-0001` resolved the first deterministic parent-probe motion model and `EV-0007` records the validation evidence.
-- The existing Velumin browser harness and smoke artifact path can already save inspectable PNG/JSON output for a static scene.
-- `WI-REPLAY-0001` is proposed and prompt-ready for the narrow depth-first replay artifact slice.
-- Mining design remains deferred while maintainers prioritize discoverability of current deterministic motion state.
+- `FOCUS-REPLAY-0001` is complete: `WI-REPLAY-0001` resolved deterministic parent-probe motion replay through Velumin and `EV-0008` records the replay artifact evidence.
+- The Rust simulation model already exposes normalized thrust/turn input and tunable motion configuration.
+- The browser harness already renders project-owned Velumin frames, but does not yet support live parent-probe control.
+- A narrow tuning sandbox lets maintainers evaluate heavy motion feel before committing to mining, collision, shield, enemy, or child-probe gameplay.
 
 ## Priorities
-1. Execute `WI-REPLAY-0001`.
-2. Keep the replay fixed, scripted, deterministic, and sourced from the Rust simulation model.
-3. Render replay-derived parent-probe pose through Velumin's browser harness.
-4. Save inspectable local PNG/JSON artifacts without turning the capture into a broad visual regression gate.
+1. Execute `WI-INTERACT-0001`.
+2. Keep the authoritative parent-probe motion step in Rust and deterministic where practical.
+3. Add browser keyboard thrust/turn input only for the tuning sandbox.
+4. Add a small designer-facing tuning surface for weight, inertia, and responsiveness.
+5. Keep one or two static asteroid outlines as spatial references, not interactive objects.
 
 ## Non-Goals
-- Do not add browser keyboard, pointer, controller, or input loops in this focus.
-- Do not implement mining, matter resources, shield construction, collision, parent integrity, enemies, child-probe construction, launch sequence, scoring, progression, or UI.
-- Do not add live gameplay loops or player-controlled motion.
+- Do not implement mining, matter resources, shield construction, collision, parent integrity, enemies, child-probe construction, launch sequence, scoring, progression, or game-over states.
+- Do not implement asteroid interaction; asteroids are visual landmarks only in this focus.
+- Do not add production game UI beyond minimal developer tuning controls needed for this sandbox.
 - Do not add broad visual regression infrastructure, committed golden screenshots, or mandatory CI visual gates.
 - Do not replace Velumin with an alternate rendering stack.
 - Do not change Velumin unless a real API blocker is discovered and documented.
 
 ## Exit Criteria
-- `WI-REPLAY-0001` is resolved.
-- Evidence records whether deterministic parent-probe motion replay rendered through Velumin and saved inspectable PNG/JSON artifacts, or records the precise blocker.
-- Documentation identifies how to run the replay capture command and where to inspect generated artifacts.
+- `WI-INTERACT-0001` is resolved.
+- Evidence records whether keyboard-controlled parent-probe motion rendered through Velumin with live tuning controls, or records the precise blocker.
+- Documentation identifies how to run the tuning sandbox and what the controls/sliders do.
 - Canonical validation and LRH validation remain green.

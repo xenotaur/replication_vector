@@ -9,15 +9,16 @@ health: yellow
 # Current Status
 
 ## Summary
-- Replication Vector is moving from its first deterministic simulation slice into a narrow motion replay evidence slice.
+- Replication Vector is moving from deterministic motion replay evidence into a narrow controllable parent-probe tuning sandbox.
 - The repository now has an LRH control-plane scaffold, Velumin-style guidance, canonical validation scripts, CI, and a minimal Rust/WASM/Vite skeleton.
 - The first project-owned scene is now expressed as Velumin `VectorCommand` data and validated by focused Rust tests.
 - The updated Velumin API appears to provide a downstream browser frame path via `VectorFrame` and `WebGPU.renderFrame(frame)`.
 - Replication Vector now renders the existing project-owned scene through Velumin's downstream `renderFrame` browser harness.
 - A local opt-in render smoke command now saves inspectable PNG and JSON artifacts for the Velumin-rendered first scene.
 - The first deterministic Rust parent-probe motion model now exists with focused tests.
-- `FOCUS-REPLAY-0001` authorized deterministic parent-probe motion replay through Velumin with inspectable PNG/JSON capture artifacts.
+- `FOCUS-REPLAY-0001` authorized deterministic parent-probe motion replay through Velumin with inspectable PNG/JSON capture artifacts and is now complete.
 - `WI-REPLAY-0001` is resolved: the deterministic motion model now renders through the Velumin browser harness and saves local replay artifacts.
+- `FOCUS-INTERACT-0001` now authorizes a best-effort controllable parent-probe tuning sandbox for keyboard thrust/turn input and weight/inertia/responsiveness sliders.
 - The game concept is well described by the supplied design summary and lightly corroborated by `README.md`.
 
 ## Evidence Basis
@@ -38,17 +39,17 @@ health: yellow
 
 ## Active Priorities
 - Keep validation aligned with the Velumin-compatible script contract.
-- Select the next narrow focus or work item before expanding into player input, mining, shields, enemies, or child-probe behavior.
-- Keep the replay fixed, scripted, deterministic, and sourced from the Rust simulation model.
+- Execute `WI-INTERACT-0001` before expanding into mining, shields, enemies, or child-probe behavior.
+- Keep the tuning sandbox narrow, developer-facing, and sourced from the Rust simulation model where practical.
 
 ## Risks
 - Scope creep into campaign, tech tree, and content systems before the core loop is proven.
 - Passive player feel if the heavy probe lacks frequent tactical actions.
 - Visual clutter from vector shields, asteroids, beams, particles, projectiles, enemies, and UI.
 - Velumin checkout and npm setup can fail in fresh environments until `scripts/develop` succeeds.
-- Current browser verification is a focused opt-in artifact capture, not a recurring visual regression gate.
+- The tuning sandbox could drift into production UI or gameplay systems if not kept explicitly scoped.
 
 ## Recommended Next Actions
-1. Close or replace `FOCUS-REPLAY-0001`, whose exit criteria are satisfied by `WI-REPLAY-0001`.
-2. Do not expand into player input, mining, shields, enemies, or child-probe behavior until a future focus and work item explicitly authorize that scope.
-3. Keep broader gameplay systems blocked until future explicit work items authorize them.
+1. Execute `WI-INTERACT-0001` as the next narrow best-effort slice.
+2. Keep mining, asteroid collision, shields, enemies, child-probe behavior, scoring, and progression blocked until future explicit work items authorize them.
+3. After motion feel is inspectable under live control, decide whether to proceed breadth-first into mining design or depth-first into capture/evidence for the interactive sandbox.

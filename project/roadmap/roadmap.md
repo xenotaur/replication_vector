@@ -48,5 +48,6 @@ owner: project maintainers
 - `DP-0001` established the Rust/WASM/Vite package shape, CI, scripts, and scripted Velumin checkout.
 - `FOCUS-RENDER-0001` completed the first Velumin-rendered scene and opt-in render smoke artifact path.
 - `FOCUS-SIM-0001` and `WI-SIM-0001` completed the first deterministic parent-probe simulation slice.
-- `FOCUS-REPLAY-0001` and proposed `WI-REPLAY-0001` bind the next narrow depth-first replay evidence slice before broader gameplay expansion.
+- `FOCUS-REPLAY-0001` and `WI-REPLAY-0001` completed the narrow depth-first replay evidence slice before broader gameplay expansion.
+- `FOCUS-INTERACT-0001` and proposed `WI-INTERACT-0001` bind the next narrow best-effort interactivity slice: controllable parent-probe motion tuning before mining, shields, enemies, or child-probe behavior.
 - Simple enemy silhouettes remain deferred until enemy pressure or a future explicit rendering work item is selected.
