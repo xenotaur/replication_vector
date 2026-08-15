@@ -87,8 +87,9 @@ Add a narrow browser tuning sandbox where maintainers can control the parent pro
 3. Add focused Rust tests for the tuning mapper and any new simulation boundary helpers.
 4. Extend `replication_vector/web/index.html` with an opt-in sandbox route or mode that captures keyboard thrust/turn input, steps the Rust motion model, and submits frames through Velumin `renderFrame`.
 5. Keep static scene and replay paths available unless the implementation explicitly documents a compatible replacement.
-6. Document the sandbox command/path and the meaning of its controls in `scripts/README.md`.
-7. Create evidence recording what was proven and any browser/WebGPU blocker or skip condition encountered.
+6. Add or document a browser-level sandbox verification path, such as an opt-in smoke command or manual evidence procedure, that can catch broken keyboard input, slider wiring, animation stepping, or Velumin frame submission.
+7. Document the sandbox command/path, validation path, and meaning of its controls in `scripts/README.md`.
+8. Create evidence recording what was proven and any browser/WebGPU blocker or skip condition encountered.
 
 ## Non-Goals
 - Do not implement mining, matter resources, asteroid depletion, or resource counters.
@@ -104,6 +105,7 @@ Add a narrow browser tuning sandbox where maintainers can control the parent pro
 - Weight, inertia, and responsiveness sliders visibly affect motion feel by mapping to existing Rust motion configuration fields.
 - New configuration-mapping or simulation-boundary behavior is covered by focused Rust tests.
 - Existing static scene and replay behavior remains available unless intentionally superseded and documented.
+- Browser-level evidence verifies the sandbox route and retained static/replay render routes, or records a clear WebGPU/browser skip condition.
 - Documentation identifies how to run the sandbox and inspect the controls.
 - No out-of-scope gameplay systems are added.
 
@@ -113,6 +115,9 @@ Add a narrow browser tuning sandbox where maintainers can control the parent pro
 - `scripts/lint`
 - `scripts/test`
 - `scripts/baseline`
+- `scripts/render-smoke`
+- `scripts/render-replay-smoke`
+- Sandbox browser smoke command if added; otherwise documented manual browser verification with PNG/JSON or equivalent evidence
 - `lrh validate`
 
 ## Risk Notes
