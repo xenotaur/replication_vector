@@ -13,10 +13,11 @@ related_focus:
   - FOCUS-INTERACT-0001
 related_roadmap:
   - ROADMAP-INITIAL
-related_workstreams: []
+related_workstreams:
+  - WS-INTERACT-0001
 related_design:
   - project/design/proposals/adopted/DP-0000-replication-vector-game-design.md
-  - project/design/proposals/proposed/DP-0003-parent-probe-motion-model.md
+  - project/design/proposals/adopted/DP-0003-parent-probe-motion-model.md
   - project/design/proposals/adopted/DP-0001-velumin-repo-infrastructure.md
 depends_on: []
 blocked_by: []
@@ -71,7 +72,7 @@ Add a narrow browser tuning sandbox where maintainers can control the parent pro
 
 ### Demand search
 - Work items: None found.
-- Proposals: Related: `DP-0003` excludes browser input and establishes the motion model that this item should reuse.
+- Proposals: Related: adopted `DP-0003` excluded browser input for its own slice and establishes the motion model that this item should reuse.
 - Backlog: Related adopted design notes mention a minimal input loop, but no concrete proposed work item exists.
 - Recommendation: No close/link action.
 

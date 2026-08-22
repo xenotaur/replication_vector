@@ -17,7 +17,7 @@ resolution: Added a deterministic Rust parent-probe motion model with focused te
 Implement the first core simulation slice: a deterministic Rust model for parent-probe movement and rotation.
 
 ## Context
-- `DP-0003` proposes the first post-rendering core simulation slice.
+- Adopted `DP-0003` records the first post-rendering core simulation slice.
 - `ROADMAP-INITIAL` lists slow inertial movement and rotation as the start of Phase 2 Core Simulation.
 - The adopted game design says the parent probe should feel slow, heavy, industrial, powerful, and more like a mobile fortress than a nimble fighter.
 - The current renderer scene is static; this item should add simulation-domain state and tests without wiring that state into browser rendering.

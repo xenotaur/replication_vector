@@ -1,8 +1,9 @@
 ---
 id: DP-0003
 title: Add deterministic parent-probe motion model
-status: proposed
+status: adopted
 date: 2026-08-05
+adopted_date: 2026-08-22
 ---
 
 # DP-0003: Add Deterministic Parent-Probe Motion Model
@@ -12,6 +13,12 @@ date: 2026-08-05
 - Model only parent-probe pose, angular velocity, linear velocity, slow thrust, and slow rotation.
 - Keep the model independent from browser input, rendering, mining, enemies, child-probe construction, scoring, progression, and collision.
 - Validate the model with focused Rust unit tests that step fixed time deltas and assert deterministic state changes.
+
+## Lifecycle
+- Adopted after implementation by `WI-SIM-0001`.
+- Implementation evidence: `EV-0007`.
+- The adopted implementation adds deterministic Rust parent-probe state, input, configuration, stepping, heading normalization, and focused tests.
+- Browser input and live rendering integration remain deferred to `WI-INTERACT-0001`.
 
 ## Rationale
 - `FOCUS-RENDER-0001` has now proven the first Velumin-rendered scene and local render artifact path.
@@ -119,4 +126,4 @@ date: 2026-08-05
 - Canonical Rust validation remains green.
 
 ## Implementation Work Item
-- Proposed next item: `WI-SIM-0001`: Add deterministic parent-probe movement and rotation model.
+- Implemented by `WI-SIM-0001`: Add deterministic parent-probe movement and rotation model.
