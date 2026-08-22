@@ -32,7 +32,7 @@ health: yellow
 - `EV-0007` records the deterministic parent-probe motion model and focused test coverage.
 - `EV-0008` records the deterministic parent-probe replay artifact path.
 - `DP-0001` records the adopted decision to use a scripted Velumin checkout and minimal Rust/WASM/Vite skeleton.
-- `DP-0003` proposes the first deterministic parent-probe motion model.
+- `DP-0003` records the adopted deterministic parent-probe motion model.
 
 ## Current Health
 - Yellow: strong concept/design direction, repository infrastructure, the first Velumin-rendered scene, an opt-in local render artifact path, the first deterministic motion model, and a replay artifact path exist, but no playable input, mining, shield, enemy, child-probe, or launch loop exists yet.
