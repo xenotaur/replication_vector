@@ -2,10 +2,10 @@
 execution_id: 2026_08_22_18_35_01_CONTROL_PLANE_AUDIT_WORKSTREAM_CONFIRM
 prompt_id: PROMPT(AD_HOC:CONTROL_PLANE_AUDIT_WORKSTREAM_CONFIRM)[2026-08-22T18:30:36+00:00]
 work_item: AD_HOC
-status: in_progress
+status: landed
 rerun_of:
 pr: https://github.com/xenotaur/replication_vector/pull/18
-commit: 72d4b3a5ba3e62428bc6379bbe85e28ce4e23102
+commit: ada841f47a14c3e10b4a8343e0822756b2d814f8
 created_at: 2026-08-22T18:35:01+00:00
 agent: codex_app
 instruction_source: lrh-land confirm-fixes for PR 18

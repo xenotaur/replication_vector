@@ -2,10 +2,10 @@
 execution_id: 2026_08_22_18_28_34_CONTROL_PLANE_AUDIT_WORKSTREAM_REVIEW
 prompt_id: PROMPT(AD_HOC:CONTROL_PLANE_AUDIT_WORKSTREAM_REVIEW)[2026-08-22T18:28:29+00:00]
 work_item: AD_HOC
-status: in_progress
+status: landed
 rerun_of:
 pr: https://github.com/xenotaur/replication_vector/pull/18
-commit: c8e6a343716eaf9e74a404f43a1da78dcae10c2e
+commit: ada841f47a14c3e10b4a8343e0822756b2d814f8
 created_at: 2026-08-22T18:28:34+00:00
 agent: codex_app
 instruction_source: lrh-land review-response for PR 18
