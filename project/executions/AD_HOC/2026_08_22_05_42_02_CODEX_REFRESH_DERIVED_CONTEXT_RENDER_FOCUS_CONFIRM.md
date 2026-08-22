@@ -2,10 +2,10 @@
 execution_id: 2026_08_22_05_42_02_CODEX_REFRESH_DERIVED_CONTEXT_RENDER_FOCUS_CONFIRM
 prompt_id: PROMPT(AD_HOC:CODEX_REFRESH_DERIVED_CONTEXT_RENDER_FOCUS_CONFIRM)[2026-08-22T05:32:50+00:00]
 work_item: AD_HOC
-status: in_progress
+status: landed
 rerun_of:
 pr: https://github.com/xenotaur/replication_vector/pull/16
-commit: 7a95b574411a377cc78efaa3f9f5e56ba27f7920
+commit: 3f07bc61511914a2c5f6e8316ebc9e122a23575d
 created_at: 2026-08-22T05:42:02+00:00
 agent: codex_app
 instruction_source: https://github.com/xenotaur/replication_vector/pull/16

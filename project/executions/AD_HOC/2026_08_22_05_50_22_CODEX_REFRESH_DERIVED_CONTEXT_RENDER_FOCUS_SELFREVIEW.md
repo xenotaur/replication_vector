@@ -2,10 +2,10 @@
 execution_id: 2026_08_22_05_50_22_CODEX_REFRESH_DERIVED_CONTEXT_RENDER_FOCUS_SELFREVIEW
 prompt_id: PROMPT(AD_HOC:CODEX_REFRESH_DERIVED_CONTEXT_RENDER_FOCUS_SELFREVIEW)[2026-08-22T05:50:17+00:00]
 work_item: AD_HOC
-status: in_progress
+status: landed
 rerun_of:
 pr: https://github.com/xenotaur/replication_vector/pull/16
-commit: 0b0764a28bdb79802062eb72762f97ba613de5b9
+commit: 3f07bc61511914a2c5f6e8316ebc9e122a23575d
 created_at: 2026-08-22T05:50:22+00:00
 agent: codex_app
 instruction_source: https://github.com/xenotaur/replication_vector/pull/16
