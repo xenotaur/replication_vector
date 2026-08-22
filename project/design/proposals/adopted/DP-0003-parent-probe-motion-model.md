@@ -18,6 +18,7 @@ adopted_date: 2026-08-22
 - Adopted after implementation by `WI-SIM-0001`.
 - Implementation evidence: `EV-0007`.
 - The adopted implementation adds deterministic Rust parent-probe state, input, configuration, stepping, heading normalization, and focused tests.
+- The adopted implementation clamps negative thrust to zero; the parent probe has no reverse thrust in this first slice.
 - Browser input and live rendering integration remain deferred to `WI-INTERACT-0001`.
 
 ## Rationale
@@ -36,7 +37,7 @@ adopted_date: 2026-08-22
   - `heading_radians`: current facing direction.
   - `angular_velocity_radians_per_second`: current rotation velocity.
 - `ParentProbeMotionInput`
-  - `thrust`: normalized scalar in `[-1.0, 1.0]`.
+  - `thrust`: normalized forward scalar in `[0.0, 1.0]`; negative inputs are clamped to zero.
   - `turn`: normalized scalar in `[-1.0, 1.0]`.
 - `ParentProbeMotionConfig`
   - `thrust_acceleration`
@@ -50,7 +51,7 @@ adopted_date: 2026-08-22
 
 ### Behavior
 - Positive thrust accelerates along the current heading.
-- Negative thrust may either be allowed as weak reverse thrust or omitted in the first implementation; the work item should choose one explicitly.
+- Negative thrust is clamped to zero for the adopted first implementation, so there is no reverse thrust until a future tuning item explicitly changes that behavior.
 - Turn input changes angular velocity rather than snapping heading directly.
 - Linear and angular drag damp velocities over time, preserving an inertial feel.
 - Linear speed and angular speed are clamped to configured maxima.
