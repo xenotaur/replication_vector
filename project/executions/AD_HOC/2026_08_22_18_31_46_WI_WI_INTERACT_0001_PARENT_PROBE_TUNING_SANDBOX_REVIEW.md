@@ -2,10 +2,10 @@
 execution_id: 2026_08_22_18_31_46_WI_WI_INTERACT_0001_PARENT_PROBE_TUNING_SANDBOX_REVIEW
 prompt_id: PROMPT(AD_HOC:WI_WI_INTERACT_0001_PARENT_PROBE_TUNING_SANDBOX_REVIEW)[2026-08-22T18:29:38+00:00]
 work_item: AD_HOC
-status: in_progress
+status: landed
 rerun_of: 2026_08_22_18_04_22_WI_INTERACT_0001
 pr: https://github.com/xenotaur/replication_vector/pull/17
-commit: 
+commit: 83d566a6590f141e1e98189471b067852be76411
 agent: codex_app
 instruction_source: https://github.com/xenotaur/replication_vector/pull/17
 session_transcript: pending

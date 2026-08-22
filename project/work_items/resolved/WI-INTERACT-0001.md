@@ -2,13 +2,13 @@
 id: WI-INTERACT-0001
 title: Add controllable parent-probe tuning sandbox
 type: deliverable
-status: active
+status: resolved
 priority: high
 owner: project maintainers
 created: 2026-08-14
 blocked: false
 blocked_reason: null
-resolution: null
+resolution: Implemented and merged in PR #17 (commit 83d566a6590f141e1e98189471b067852be76411)
 related_focus:
   - FOCUS-INTERACT-0001
 related_roadmap:
