@@ -6,7 +6,11 @@ use webgpu_vector_lib::{Color, Line, Polyline, StrokeStyle, Vec2, VectorCommand}
 
 pub mod simulation;
 
-use simulation::{ParentProbeReplay, ParentProbeState, deterministic_parent_probe_replay};
+use simulation::{
+    ParentProbeMotionInput, ParentProbeReplay, ParentProbeState, ParentProbeTuningSliders, SimVec2,
+    deterministic_parent_probe_replay, parent_probe_motion_config_from_tuning,
+    step_parent_probe_motion_with_tuning,
+};
 
 const CYAN: Color = Color {
     red: 0.2,
@@ -55,6 +59,29 @@ const ASTEROID_OUTLINE: [[f32; 2]; 8] = [
     [-0.63, 0.05],
     [-0.79, 0.14],
     [-0.78, 0.28],
+];
+
+const SANDBOX_ASTEROID_OUTLINES: [[[f32; 2]; 8]; 2] = [
+    [
+        [-0.82, 0.44],
+        [-0.7, 0.58],
+        [-0.5, 0.54],
+        [-0.39, 0.37],
+        [-0.48, 0.2],
+        [-0.68, 0.13],
+        [-0.88, 0.24],
+        [-0.82, 0.44],
+    ],
+    [
+        [0.54, -0.52],
+        [0.72, -0.44],
+        [0.86, -0.56],
+        [0.82, -0.76],
+        [0.62, -0.84],
+        [0.43, -0.72],
+        [0.38, -0.6],
+        [0.54, -0.52],
+    ],
 ];
 
 const SHIELD_ARC: [[f32; 2]; 6] = [
@@ -125,6 +152,19 @@ fn scene_for_parent_state(state: ParentProbeState) -> Vec<VectorCommand> {
     ]
 }
 
+fn sandbox_scene_for_parent_state(state: ParentProbeState) -> Vec<VectorCommand> {
+    let mut commands = vec![polyline_from_vec(
+        transform_parent_probe_outline(state),
+        stroke(0.018, CYAN, 1.15),
+    )];
+
+    for outline in SANDBOX_ASTEROID_OUTLINES {
+        commands.push(polyline(&outline, stroke(0.014, AMBER, 0.95)));
+    }
+
+    commands
+}
+
 pub fn first_replication_vector_scene() -> Vec<VectorCommand> {
     vec![
         polyline(&PARENT_PROBE_OUTLINE, stroke(0.018, CYAN, 1.15)),
@@ -139,12 +179,20 @@ pub fn deterministic_parent_probe_replay_scene() -> Vec<VectorCommand> {
     scene_for_parent_state(replay.final_state)
 }
 
+pub fn parent_probe_sandbox_scene() -> Vec<VectorCommand> {
+    sandbox_scene_for_parent_state(ParentProbeState::default())
+}
+
 pub fn first_replication_vector_scene_command_count() -> usize {
     first_replication_vector_scene().len()
 }
 
 pub fn deterministic_parent_probe_replay_command_count() -> usize {
     deterministic_parent_probe_replay_scene().len()
+}
+
+pub fn parent_probe_sandbox_scene_command_count() -> usize {
+    parent_probe_sandbox_scene().len()
 }
 
 pub fn deterministic_parent_probe_replay_metadata_json() -> String {
@@ -167,6 +215,48 @@ pub fn replication_vector_replay_metadata_json() -> String {
     deterministic_parent_probe_replay_metadata_json()
 }
 
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
+pub fn replication_vector_parent_probe_sandbox_command_count() -> u32 {
+    parent_probe_sandbox_scene_command_count() as u32
+}
+
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
+#[allow(clippy::too_many_arguments)]
+pub fn replication_vector_step_parent_probe_json(
+    position_x: f32,
+    position_y: f32,
+    velocity_x: f32,
+    velocity_y: f32,
+    heading_radians: f32,
+    angular_velocity_radians_per_second: f32,
+    thrust: f32,
+    turn: f32,
+    weight: f32,
+    inertia: f32,
+    responsiveness: f32,
+    delta_seconds: f32,
+) -> String {
+    let sliders = ParentProbeTuningSliders {
+        weight,
+        inertia,
+        responsiveness,
+    };
+    let config = parent_probe_motion_config_from_tuning(sliders);
+    let state = step_parent_probe_motion_with_tuning(
+        ParentProbeState {
+            position: SimVec2::new(position_x, position_y),
+            velocity: SimVec2::new(velocity_x, velocity_y),
+            heading_radians,
+            angular_velocity_radians_per_second,
+        },
+        ParentProbeMotionInput { thrust, turn },
+        sliders,
+        delta_seconds,
+    );
+
+    parent_probe_sandbox_step_json(state, config)
+}
+
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
 pub fn replication_vector_first_scene_frame() -> Result<VectorFrame, JsValue> {
@@ -177,6 +267,21 @@ pub fn replication_vector_first_scene_frame() -> Result<VectorFrame, JsValue> {
 #[wasm_bindgen]
 pub fn replication_vector_replay_frame() -> Result<VectorFrame, JsValue> {
     vector_frame_from_commands(deterministic_parent_probe_replay_scene())
+}
+
+#[cfg(target_arch = "wasm32")]
+#[wasm_bindgen]
+pub fn replication_vector_parent_probe_sandbox_frame(
+    position_x: f32,
+    position_y: f32,
+    heading_radians: f32,
+) -> Result<VectorFrame, JsValue> {
+    vector_frame_from_commands(sandbox_scene_for_parent_state(ParentProbeState {
+        position: SimVec2::new(position_x, position_y),
+        velocity: SimVec2::ZERO,
+        heading_radians,
+        angular_velocity_radians_per_second: 0.0,
+    }))
 }
 
 #[cfg(target_arch = "wasm32")]
@@ -191,6 +296,42 @@ fn vector_frame_from_commands(commands: Vec<VectorCommand>) -> Result<VectorFram
     }
 
     Ok(frame)
+}
+
+fn parent_probe_sandbox_step_json(
+    state: ParentProbeState,
+    config: simulation::ParentProbeMotionConfig,
+) -> String {
+    format!(
+        concat!(
+            "{{",
+            "\"position\":{{\"x\":{:.8},\"y\":{:.8}}},",
+            "\"velocity\":{{\"x\":{:.8},\"y\":{:.8}}},",
+            "\"headingRadians\":{:.8},",
+            "\"angularVelocityRadiansPerSecond\":{:.8},",
+            "\"config\":{{",
+            "\"thrustAcceleration\":{:.8},",
+            "\"turnAcceleration\":{:.8},",
+            "\"linearDrag\":{:.8},",
+            "\"angularDrag\":{:.8},",
+            "\"maxSpeed\":{:.8},",
+            "\"maxAngularSpeed\":{:.8}",
+            "}}",
+            "}}"
+        ),
+        state.position.x,
+        state.position.y,
+        state.velocity.x,
+        state.velocity.y,
+        state.heading_radians,
+        state.angular_velocity_radians_per_second,
+        config.thrust_acceleration,
+        config.turn_acceleration,
+        config.linear_drag,
+        config.angular_drag,
+        config.max_speed,
+        config.max_angular_speed,
+    )
 }
 
 fn replay_metadata_json(replay: &ParentProbeReplay) -> String {
@@ -326,5 +467,65 @@ mod tests {
         assert!(metadata.contains("\"totalSteps\":48"));
         assert!(metadata.contains("\"capturedStep\":48"));
         assert!(metadata.contains("\"finalState\""));
+    }
+
+    #[test]
+    fn sandbox_scene_renders_controlled_probe_with_static_asteroids() {
+        let state = ParentProbeState {
+            position: SimVec2::new(0.25, -0.1),
+            heading_radians: 0.5,
+            ..ParentProbeState::default()
+        };
+        let scene = sandbox_scene_for_parent_state(state);
+        let first_scene = first_replication_vector_scene();
+
+        assert_eq!(scene.len(), 3);
+        assert!(matches!(scene[0], VectorCommand::Polyline(_)));
+        assert!(matches!(scene[1], VectorCommand::Polyline(_)));
+        assert!(matches!(scene[2], VectorCommand::Polyline(_)));
+
+        let VectorCommand::Polyline(parent_probe) = &scene[0] else {
+            panic!("sandbox parent probe should be a polyline outline");
+        };
+        let VectorCommand::Polyline(first_asteroid) = &scene[1] else {
+            panic!("sandbox asteroid should be a polyline outline");
+        };
+        let VectorCommand::Polyline(second_asteroid) = &scene[2] else {
+            panic!("sandbox asteroid should be a polyline outline");
+        };
+        let VectorCommand::Polyline(first_scene_parent) = &first_scene[0] else {
+            panic!("first scene parent probe should be a polyline outline");
+        };
+
+        assert_eq!(parent_probe.points.first(), parent_probe.points.last());
+        assert_eq!(first_asteroid.points.first(), first_asteroid.points.last());
+        assert_eq!(
+            second_asteroid.points.first(),
+            second_asteroid.points.last()
+        );
+        assert_ne!(parent_probe.points, first_scene_parent.points);
+    }
+
+    #[test]
+    fn sandbox_step_json_contains_state_and_mapped_config() {
+        let json = replication_vector_step_parent_probe_json(
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            1.0,
+            0.0,
+            0.5,
+            0.5,
+            0.5,
+            1.0 / 30.0,
+        );
+
+        assert!(json.contains("\"position\""));
+        assert!(json.contains("\"velocity\""));
+        assert!(json.contains("\"thrustAcceleration\":0.50000000"));
+        assert!(json.contains("\"maxSpeed\":1.50000000"));
     }
 }

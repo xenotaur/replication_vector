@@ -106,6 +106,22 @@ pub struct ParentProbeMotionConfig {
     pub max_angular_speed: f32,
 }
 
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct ParentProbeTuningSliders {
+    /// Designer-facing mass feel in `[0.0, 1.0]`.
+    ///
+    /// Higher values reduce thrust acceleration and top speed.
+    pub weight: f32,
+    /// Designer-facing drift persistence in `[0.0, 1.0]`.
+    ///
+    /// Higher values reduce linear and angular damping.
+    pub inertia: f32,
+    /// Designer-facing control response in `[0.0, 1.0]`.
+    ///
+    /// Higher values increase turn acceleration and angular speed.
+    pub responsiveness: f32,
+}
+
 #[derive(Clone, Debug, PartialEq)]
 pub struct ParentProbeReplaySample {
     pub step_index: u32,
@@ -133,6 +149,47 @@ impl Default for ParentProbeMotionConfig {
             max_angular_speed: PI,
         }
     }
+}
+
+impl Default for ParentProbeTuningSliders {
+    fn default() -> Self {
+        Self {
+            weight: 0.5,
+            inertia: 0.5,
+            responsiveness: 0.5,
+        }
+    }
+}
+
+pub fn parent_probe_motion_config_from_tuning(
+    sliders: ParentProbeTuningSliders,
+) -> ParentProbeMotionConfig {
+    let weight = unit_interval(sliders.weight);
+    let inertia = unit_interval(sliders.inertia);
+    let responsiveness = unit_interval(sliders.responsiveness);
+
+    ParentProbeMotionConfig {
+        thrust_acceleration: lerp(0.8, 0.2, weight),
+        turn_acceleration: lerp(1.0, 3.0, responsiveness),
+        linear_drag: lerp(0.35, 0.05, inertia),
+        angular_drag: lerp(2.4, 0.6, inertia),
+        max_speed: lerp(2.0, 1.0, weight),
+        max_angular_speed: PI * lerp(0.55, 1.45, responsiveness),
+    }
+}
+
+pub fn step_parent_probe_motion_with_tuning(
+    state: ParentProbeState,
+    input: ParentProbeMotionInput,
+    sliders: ParentProbeTuningSliders,
+    delta_seconds: f32,
+) -> ParentProbeState {
+    step_parent_probe_motion(
+        state,
+        input,
+        parent_probe_motion_config_from_tuning(sliders),
+        delta_seconds.clamp(0.0, 0.05),
+    )
 }
 
 pub fn deterministic_parent_probe_replay() -> ParentProbeReplay {
@@ -228,6 +285,14 @@ fn clamp_abs(value: f32, max_abs: f32) -> f32 {
     value.clamp(-max_abs, max_abs)
 }
 
+fn unit_interval(value: f32) -> f32 {
+    value.clamp(0.0, 1.0)
+}
+
+fn lerp(min: f32, max: f32, amount: f32) -> f32 {
+    min + (max - min) * amount
+}
+
 pub fn normalize_heading(heading_radians: f32) -> f32 {
     (heading_radians + PI).rem_euclid(TAU) - PI
 }
@@ -251,6 +316,83 @@ mod tests {
             angular_drag: 0.0,
             ..ParentProbeMotionConfig::default()
         }
+    }
+
+    #[test]
+    fn default_tuning_maps_to_existing_default_motion_config() {
+        let config = parent_probe_motion_config_from_tuning(ParentProbeTuningSliders::default());
+
+        assert_close(
+            config.thrust_acceleration,
+            ParentProbeMotionConfig::default().thrust_acceleration,
+        );
+        assert_close(
+            config.turn_acceleration,
+            ParentProbeMotionConfig::default().turn_acceleration,
+        );
+        assert_close(
+            config.linear_drag,
+            ParentProbeMotionConfig::default().linear_drag,
+        );
+        assert_close(
+            config.angular_drag,
+            ParentProbeMotionConfig::default().angular_drag,
+        );
+        assert_close(
+            config.max_speed,
+            ParentProbeMotionConfig::default().max_speed,
+        );
+        assert_close(
+            config.max_angular_speed,
+            ParentProbeMotionConfig::default().max_angular_speed,
+        );
+    }
+
+    #[test]
+    fn tuning_sliders_clamp_and_map_to_config_extremes() {
+        let light_responsive = parent_probe_motion_config_from_tuning(ParentProbeTuningSliders {
+            weight: -2.0,
+            inertia: 0.0,
+            responsiveness: 2.0,
+        });
+        let heavy_inert = parent_probe_motion_config_from_tuning(ParentProbeTuningSliders {
+            weight: 1.0,
+            inertia: 1.0,
+            responsiveness: 0.0,
+        });
+
+        assert_close(light_responsive.thrust_acceleration, 0.8);
+        assert_close(light_responsive.linear_drag, 0.35);
+        assert_close(light_responsive.turn_acceleration, 3.0);
+        assert_close(light_responsive.max_angular_speed, PI * 1.45);
+        assert_close(heavy_inert.thrust_acceleration, 0.2);
+        assert_close(heavy_inert.linear_drag, 0.05);
+        assert_close(heavy_inert.angular_drag, 0.6);
+        assert_close(heavy_inert.max_speed, 1.0);
+    }
+
+    #[test]
+    fn tuning_step_bounds_large_browser_delta() {
+        let state = step_parent_probe_motion_with_tuning(
+            ParentProbeState::default(),
+            ParentProbeMotionInput {
+                thrust: 1.0,
+                turn: 1.0,
+            },
+            ParentProbeTuningSliders::default(),
+            2.0,
+        );
+        let bounded = step_parent_probe_motion(
+            ParentProbeState::default(),
+            ParentProbeMotionInput {
+                thrust: 1.0,
+                turn: 1.0,
+            },
+            ParentProbeMotionConfig::default(),
+            0.05,
+        );
+
+        assert_eq!(state, bounded);
     }
 
     #[test]

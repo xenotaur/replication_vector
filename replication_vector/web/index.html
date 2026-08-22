@@ -40,26 +40,127 @@
       font-size: 0.875rem;
       line-height: 1.4;
     }
+
+    #sandbox-controls {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      display: none;
+      width: min(22rem, calc(100vw - 2rem));
+      padding: 0.75rem;
+      background: rgb(5 7 10 / 0.82);
+      color: #e8fbff;
+      font-size: 0.875rem;
+    }
+
+    body[data-scene="sandbox"] #sandbox-controls {
+      display: grid;
+      gap: 0.65rem;
+    }
+
+    .tuning-row {
+      display: grid;
+      grid-template-columns: 7rem 1fr 3rem;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tuning-row input {
+      width: 100%;
+      accent-color: #7ff7ff;
+    }
+
+    .tuning-row output {
+      color: #ffd76a;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
   </style>
 </head>
 <body>
   <main>
     <canvas id="scene" width="960" height="540"></canvas>
+    <div id="sandbox-controls" aria-label="Parent probe tuning controls">
+      <label class="tuning-row">
+        <span>Weight</span>
+        <input id="weight" type="range" min="0" max="1" step="0.01" value="0.5">
+        <output for="weight" id="weight-value">0.50</output>
+      </label>
+      <label class="tuning-row">
+        <span>Inertia</span>
+        <input id="inertia" type="range" min="0" max="1" step="0.01" value="0.5">
+        <output for="inertia" id="inertia-value">0.50</output>
+      </label>
+      <label class="tuning-row">
+        <span>Response</span>
+        <input id="responsiveness" type="range" min="0" max="1" step="0.01" value="0.5">
+        <output for="responsiveness" id="responsiveness-value">0.50</output>
+      </label>
+    </div>
     <div id="status" role="status" aria-live="polite">loading</div>
   </main>
   <script type="module">
     import init, {
       WebGPU,
       replication_vector_first_scene_frame,
+      replication_vector_parent_probe_sandbox_command_count,
+      replication_vector_parent_probe_sandbox_frame,
       replication_vector_replay_command_count,
       replication_vector_replay_frame,
       replication_vector_replay_metadata_json,
       replication_vector_scene_command_count,
+      replication_vector_step_parent_probe_json,
     } from "@pkg/replication_vector.js";
 
     const status = document.getElementById("status");
+    const sliderElements = {
+      weight: document.getElementById("weight"),
+      inertia: document.getElementById("inertia"),
+      responsiveness: document.getElementById("responsiveness"),
+    };
+    const sliderOutputs = {
+      weight: document.getElementById("weight-value"),
+      inertia: document.getElementById("inertia-value"),
+      responsiveness: document.getElementById("responsiveness-value"),
+    };
     const params = new URLSearchParams(window.location.search);
-    const scene = params.get("scene") === "replay" ? "replay" : "first-scene";
+    const requestedScene = params.get("scene");
+    const scene = requestedScene === "replay" || requestedScene === "sandbox" ? requestedScene : "first-scene";
+    document.body.dataset.scene = scene;
+    const keys = new Set();
+    const state = {
+      position: { x: 0, y: 0 },
+      velocity: { x: 0, y: 0 },
+      headingRadians: 0,
+      angularVelocityRadiansPerSecond: 0,
+      config: null,
+    };
+
+    function sliderValue(name) {
+      return Number(sliderElements[name].value);
+    }
+
+    function tuning() {
+      return {
+        weight: sliderValue("weight"),
+        inertia: sliderValue("inertia"),
+        responsiveness: sliderValue("responsiveness"),
+      };
+    }
+
+    function syncSliderOutputs() {
+      for (const [name, output] of Object.entries(sliderOutputs)) {
+        output.value = sliderValue(name).toFixed(2);
+      }
+    }
+
+    function sandboxInput() {
+      const thrust = keys.has("ArrowUp") || keys.has("KeyW") ? 1 : 0;
+      let turn = 0;
+      if (keys.has("ArrowLeft") || keys.has("KeyA")) turn -= 1;
+      if (keys.has("ArrowRight") || keys.has("KeyD")) turn += 1;
+      return { thrust, turn };
+    }
 
     function renderOrReport(gpu) {
       const frame =
@@ -80,9 +181,87 @@
       };
     }
 
+    function renderSandbox(gpu, commandCount) {
+      gpu.renderFrame(
+        replication_vector_parent_probe_sandbox_frame(
+          state.position.x,
+          state.position.y,
+          state.headingRadians,
+        ),
+      );
+      status.textContent = `Velumin rendered ${commandCount} sandbox commands`;
+      window.replicationVectorLastRender = {
+        commandCount,
+        input: sandboxInput(),
+        scene,
+        state: structuredClone(state),
+        tuning: tuning(),
+      };
+    }
+
+    function stepSandbox(deltaSeconds) {
+      const input = sandboxInput();
+      const sliders = tuning();
+      const stepped = JSON.parse(
+        replication_vector_step_parent_probe_json(
+          state.position.x,
+          state.position.y,
+          state.velocity.x,
+          state.velocity.y,
+          state.headingRadians,
+          state.angularVelocityRadiansPerSecond,
+          input.thrust,
+          input.turn,
+          sliders.weight,
+          sliders.inertia,
+          sliders.responsiveness,
+          deltaSeconds,
+        ),
+      );
+
+      Object.assign(state.position, stepped.position);
+      Object.assign(state.velocity, stepped.velocity);
+      state.headingRadians = stepped.headingRadians;
+      state.angularVelocityRadiansPerSecond = stepped.angularVelocityRadiansPerSecond;
+      state.config = stepped.config;
+    }
+
+    function runSandbox(gpu) {
+      syncSliderOutputs();
+      for (const input of Object.values(sliderElements)) {
+        input.addEventListener("input", syncSliderOutputs);
+      }
+      window.addEventListener("keydown", (event) => {
+        if (["ArrowUp", "ArrowLeft", "ArrowRight", "KeyW", "KeyA", "KeyD"].includes(event.code)) {
+          event.preventDefault();
+          keys.add(event.code);
+        }
+      });
+      window.addEventListener("keyup", (event) => {
+        keys.delete(event.code);
+      });
+
+      const commandCount = replication_vector_parent_probe_sandbox_command_count();
+      let previousTime = performance.now();
+
+      function frame(now) {
+        stepSandbox((now - previousTime) / 1000);
+        previousTime = now;
+        renderSandbox(gpu, commandCount);
+        window.requestAnimationFrame(frame);
+      }
+
+      renderSandbox(gpu, commandCount);
+      window.requestAnimationFrame(frame);
+    }
+
     async function run() {
       await init();
       const gpu = await WebGPU.create("scene");
+      if (scene === "sandbox") {
+        runSandbox(gpu);
+        return;
+      }
       renderOrReport(gpu);
       window.addEventListener("resize", () => renderOrReport(gpu));
     }

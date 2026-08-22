@@ -7,14 +7,20 @@ import { chromium } from "playwright";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(HERE, "../..");
 const OUT = resolve(HERE, "smoke-out");
-const SCENE = process.env.SMOKE_SCENE === "replay" ? "replay" : "first-scene";
+const SCENES = new Set(["first-scene", "replay", "sandbox"]);
+const SCENE = SCENES.has(process.env.SMOKE_SCENE) ? process.env.SMOKE_SCENE : "first-scene";
 const ARTIFACT = resolve(OUT, `${SCENE}.png`);
 const METADATA = resolve(OUT, `${SCENE}.json`);
 const PORT = process.env.SMOKE_PORT || "5173";
 const BASE = (process.env.SMOKE_URL || `http://127.0.0.1:${PORT}`).replace(/\/$/, "");
-const TARGET_URL = SCENE === "replay" ? `${BASE}/?scene=replay` : BASE;
+const TARGET_URL = SCENE === "first-scene" ? BASE : `${BASE}/?scene=${SCENE}`;
 const VIEWPORT = { width: 1024, height: 768 };
-const READY_TEXT = SCENE === "replay" ? "Velumin rendered 4 replay commands" : "Velumin rendered 4 scene commands";
+const READY_TEXTS = {
+  "first-scene": "Velumin rendered 4 scene commands",
+  replay: "Velumin rendered 4 replay commands",
+  sandbox: "Velumin rendered 3 sandbox commands",
+};
+const READY_TEXT = READY_TEXTS[SCENE];
 const READY_TIMEOUT_MS = 15000;
 
 const LAUNCH_ARGS = [
@@ -104,6 +110,10 @@ async function capture(browser) {
       throw new Error(`render status did not reach "${READY_TEXT}"; saw "${status}"`);
     }
 
+    if (SCENE === "sandbox") {
+      await driveSandbox(page);
+    }
+
     await mkdir(OUT, { recursive: true });
     await page.locator("#scene").screenshot({ path: ARTIFACT });
 
@@ -115,9 +125,12 @@ async function capture(browser) {
     const metadata = {
       artifact: ARTIFACT,
       commandCount: render.commandCount,
+      input: render.input,
       replay: render.replay,
       scene: render.scene,
+      state: render.state,
       status,
+      tuning: render.tuning,
       url: TARGET_URL,
       viewport: VIEWPORT,
       veluminCommit: commandOutput("git", ["-C", resolve(ROOT, ".deps/velumin"), "rev-parse", "--short", "HEAD"], "unknown"),
@@ -130,6 +143,51 @@ async function capture(browser) {
   } finally {
     await page.close();
   }
+}
+
+async function setRange(page, selector, value) {
+  await page.locator(selector).evaluate(
+    (input, nextValue) => {
+      input.value = nextValue;
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+    },
+    value,
+  );
+}
+
+async function driveSandbox(page) {
+  const before = await page.evaluate(() => window.replicationVectorLastRender?.state);
+  if (!before) {
+    throw new Error("sandbox did not expose initial state metadata");
+  }
+
+  await setRange(page, "#weight", "0.25");
+  await setRange(page, "#inertia", "0.75");
+  await setRange(page, "#responsiveness", "0.9");
+  await page.keyboard.down("ArrowUp");
+  await page.keyboard.down("ArrowRight");
+
+  await page.waitForFunction(
+    (initial) => {
+      const render = window.replicationVectorLastRender;
+      if (!render || render.scene !== "sandbox") return false;
+      const moved = Math.abs(render.state.position.x - initial.position.x) > 0.0001;
+      const turned = Math.abs(render.state.headingRadians - initial.headingRadians) > 0.0001;
+      const tuned = render.tuning.weight === 0.25 && render.tuning.inertia === 0.75 && render.tuning.responsiveness === 0.9;
+      const keyed = render.input.thrust === 1 && render.input.turn === 1;
+      const config = render.state.config;
+      const mapped =
+        Math.abs(config.thrustAcceleration - 0.65) < 0.0001 &&
+        Math.abs(config.turnAcceleration - 2.8) < 0.0001 &&
+        Math.abs(config.linearDrag - 0.125) < 0.0001 &&
+        Math.abs(config.angularDrag - 1.05) < 0.0001 &&
+        Math.abs(config.maxSpeed - 1.75) < 0.0001 &&
+        Math.abs(config.maxAngularSpeed - 4.27256632) < 0.0001;
+      return moved && turned && tuned && keyed && mapped;
+    },
+    before,
+    { timeout: READY_TIMEOUT_MS },
+  );
 }
 
 async function launchBrowser() {
