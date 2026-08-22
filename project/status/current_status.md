@@ -34,7 +34,7 @@ health: yellow
 - `EV-0008` records the deterministic parent-probe replay artifact path.
 - `EV-0009` records the controllable parent-probe tuning sandbox and browser/WebGPU smoke evidence.
 - `DP-0001` records the adopted decision to use a scripted Velumin checkout and minimal Rust/WASM/Vite skeleton.
-- `DP-0003` proposes the first deterministic parent-probe motion model.
+- `DP-0003` records the adopted deterministic parent-probe motion model.
 
 ## Current Health
 - Yellow: strong concept/design direction, repository infrastructure, Velumin-rendered scene/replay/sandbox paths, opt-in local render artifacts, and the first controllable parent-probe motion slice exist, but no mining, shield, enemy, child-probe, or launch loop exists yet.
