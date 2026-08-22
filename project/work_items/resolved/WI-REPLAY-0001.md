@@ -16,7 +16,7 @@ related_roadmap:
 related_workstreams: []
 related_design:
   - project/design/proposals/proposed/DP-0003-parent-probe-motion-model.md
-  - project/design/proposals/proposed/DP-0002-render-smoke-artifact.md
+  - project/design/proposals/adopted/DP-0002-render-smoke-artifact.md
 depends_on: []
 blocked_by: []
 expected_actions:
