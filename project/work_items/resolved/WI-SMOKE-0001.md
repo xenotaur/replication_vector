@@ -17,7 +17,7 @@ resolution: Added an opt-in `scripts/render-smoke` command that saves ignored PN
 Create a local, opt-in render smoke command that saves an inspectable screenshot of the Velumin-rendered Replication Vector scene.
 
 ## Context
-- `DP-0002` proposes an opt-in screenshot artifact workflow for the browser harness.
+- `DP-0002` adopts an opt-in screenshot artifact workflow for the browser harness.
 - The current canonical validation path builds Rust/WASM/Vite artifacts but does not save a browser-rendered image for human inspection.
 - The artifact should help maintainers inspect the rendered parent probe, asteroid, shield arc, and projectile without making visual browser smoke a mandatory CI gate.
 

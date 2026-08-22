@@ -1,7 +1,7 @@
 ---
 id: DP-0002
 title: Add opt-in render smoke artifact capture
-status: proposed
+status: adopted
 date: 2026-08-04
 ---
 
@@ -12,6 +12,11 @@ date: 2026-08-04
 - Store generated captures in an ignored output directory such as `replication_vector/web/smoke-out/`.
 - Keep the command outside canonical `scripts/validate` until a future work item explicitly authorizes a recurring visual gate.
 - Document the command and output path so maintainers can regenerate and inspect the latest rendered scene.
+
+## Lifecycle
+- Adopted by `WI-SMOKE-0001`.
+- Implementation evidence: `EV-0006`.
+- The adopted implementation adds `scripts/render-smoke`, writes ignored PNG/JSON artifacts under `replication_vector/web/smoke-out/`, and preserves the command as opt-in local tooling rather than a mandatory CI visual gate.
 
 ## Rationale
 - `WI-RENDER-0002` is intended to render the existing project-owned scene through Velumin's downstream frame API.
