@@ -17,6 +17,7 @@ Run scripts from the repository root.
 | `scripts/baseline` | Rebuild the Rust/WASM/Vite browser baseline. |
 | `scripts/render-smoke` | Build the browser baseline, capture the Velumin-rendered scene, and save local inspection artifacts. |
 | `scripts/render-replay-smoke` | Build the browser baseline, capture the deterministic parent-probe replay, and save local inspection artifacts. |
+| `scripts/render-sandbox-smoke` | Build the browser baseline, drive the controllable parent-probe sandbox, and save local inspection artifacts. |
 | `scripts/validate` | Run the full canonical validation sequence. |
 
 ## Recommended Workflow
@@ -93,3 +94,38 @@ replication_vector/web/smoke-out/replay.json
 ```
 
 The replay uses the Rust `step_parent_probe_motion(...)` model through a fixed scripted sequence and writes JSON metadata next to the PNG, including the captured replay step, timestep, final parent-probe state, command count, viewport, Velumin checkout, and artifact path. Like `scripts/render-smoke`, this command is opt-in, writes only ignored local artifacts, and reports a clear `SKIP` when Playwright Chromium or WebGPU support is unavailable.
+
+### Parent-probe tuning sandbox
+
+Run the browser harness and open the opt-in sandbox route:
+
+```sh
+scripts/baseline
+npm run dev --prefix replication_vector/web -- --host 127.0.0.1
+```
+
+Then visit:
+
+```text
+http://127.0.0.1:5173/?scene=sandbox
+```
+
+The sandbox keeps parent-probe motion authoritative in Rust. The browser sends normalized keyboard thrust and turn input plus slider values into the exported Rust stepping helper, then renders the returned parent pose through Velumin `renderFrame`.
+
+- `W` or `ArrowUp`: forward thrust.
+- `A` or `ArrowLeft`: turn left.
+- `D` or `ArrowRight`: turn right.
+- `Weight`: maps to Rust thrust acceleration and max speed; higher values feel heavier and slower.
+- `Inertia`: maps to Rust linear and angular drag; higher values drift longer.
+- `Response`: maps to Rust turn acceleration and max angular speed; higher values turn more readily.
+
+### `scripts/render-sandbox-smoke`
+
+Builds the browser baseline, starts the Vite harness with `?scene=sandbox`, adjusts the tuning sliders, drives keyboard thrust/turn input, waits for the Rust-stepped parent probe to move and turn, and saves:
+
+```text
+replication_vector/web/smoke-out/sandbox.png
+replication_vector/web/smoke-out/sandbox.json
+```
+
+The JSON metadata includes the latest sandbox state, keyboard input, slider values, command count, viewport, Velumin checkout, and artifact path. Like the other render smoke commands, this is opt-in, writes only ignored local artifacts, and reports a clear `SKIP` when Playwright Chromium or WebGPU support is unavailable.

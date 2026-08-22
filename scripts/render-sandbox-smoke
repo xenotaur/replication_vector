@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+WEB_DIR="$ROOT/replication_vector/web"
+
+"$ROOT/scripts/baseline"
+SMOKE_SCENE=sandbox npm run render-smoke --prefix "$WEB_DIR"
