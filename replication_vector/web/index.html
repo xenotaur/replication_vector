@@ -135,6 +135,7 @@
       angularVelocityRadiansPerSecond: 0,
       config: null,
     };
+    const SANDBOX_LIMIT = 1.15;
 
     function sliderValue(name) {
       return Number(sliderElements[name].value);
@@ -160,6 +161,10 @@
       if (keys.has("ArrowLeft") || keys.has("KeyA")) turn -= 1;
       if (keys.has("ArrowRight") || keys.has("KeyD")) turn += 1;
       return { thrust, turn };
+    }
+
+    function isRangeInput(target) {
+      return target instanceof HTMLInputElement && target.type === "range";
     }
 
     function renderOrReport(gpu) {
@@ -197,6 +202,13 @@
         state: structuredClone(state),
         tuning: tuning(),
       };
+      window.replicationVectorTestSetState = (nextState) => {
+        Object.assign(state.position, nextState.position);
+        Object.assign(state.velocity, nextState.velocity);
+        state.headingRadians = nextState.headingRadians;
+        state.angularVelocityRadiansPerSecond = nextState.angularVelocityRadiansPerSecond;
+        state.config = nextState.config;
+      };
     }
 
     function stepSandbox(deltaSeconds) {
@@ -224,6 +236,14 @@
       state.headingRadians = stepped.headingRadians;
       state.angularVelocityRadiansPerSecond = stepped.angularVelocityRadiansPerSecond;
       state.config = stepped.config;
+      wrapSandboxPosition();
+    }
+
+    function wrapSandboxPosition() {
+      if (state.position.x > SANDBOX_LIMIT) state.position.x = -SANDBOX_LIMIT;
+      if (state.position.x < -SANDBOX_LIMIT) state.position.x = SANDBOX_LIMIT;
+      if (state.position.y > SANDBOX_LIMIT) state.position.y = -SANDBOX_LIMIT;
+      if (state.position.y < -SANDBOX_LIMIT) state.position.y = SANDBOX_LIMIT;
     }
 
     function runSandbox(gpu) {
@@ -232,6 +252,7 @@
         input.addEventListener("input", syncSliderOutputs);
       }
       window.addEventListener("keydown", (event) => {
+        if (isRangeInput(event.target)) return;
         if (["ArrowUp", "ArrowLeft", "ArrowRight", "KeyW", "KeyA", "KeyD"].includes(event.code)) {
           event.preventDefault();
           keys.add(event.code);
@@ -239,6 +260,12 @@
       });
       window.addEventListener("keyup", (event) => {
         keys.delete(event.code);
+      });
+      window.addEventListener("blur", () => {
+        keys.clear();
+      });
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "hidden") keys.clear();
       });
 
       const commandCount = replication_vector_parent_probe_sandbox_command_count();

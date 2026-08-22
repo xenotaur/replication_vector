@@ -188,6 +188,37 @@ async function driveSandbox(page) {
     before,
     { timeout: READY_TIMEOUT_MS },
   );
+
+  await page.evaluate(() => window.dispatchEvent(new Event("blur")));
+  await page.keyboard.up("ArrowUp");
+  await page.keyboard.up("ArrowRight");
+  await page.waitForFunction(() => {
+    const render = window.replicationVectorLastRender;
+    return render?.input?.thrust === 0 && render.input.turn === 0;
+  });
+
+  await page.locator("#responsiveness").focus();
+  await page.keyboard.press("ArrowLeft");
+  const responsiveness = await page.locator("#responsiveness").inputValue();
+  if (responsiveness !== "0.89") {
+    throw new Error(`focused range input did not handle ArrowLeft; saw responsiveness=${responsiveness}`);
+  }
+
+  await page.evaluate(() => {
+    window.replicationVectorTestSetState?.({
+      position: { x: 1.149, y: 0 },
+      velocity: { x: 1.75, y: 0 },
+      headingRadians: 0,
+      angularVelocityRadiansPerSecond: 0,
+      config: null,
+    });
+    document.activeElement?.blur();
+  });
+  await page.keyboard.down("ArrowUp");
+  await page.waitForFunction(() => {
+    const render = window.replicationVectorLastRender;
+    return render?.state?.position?.x < -1.0;
+  });
 }
 
 async function launchBrowser() {
