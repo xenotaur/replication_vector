@@ -5,10 +5,10 @@ This `project/` directory is the planning, evidence, and memory layer for Replic
 ## Current Truth
 
 - Project goal: build Replication Vector as a Rust/WASM/Vite retro vector arcade game in the Velumin ecosystem.
-- Current focus: `FOCUS-INTERACT-0001`, a controllable parent-probe tuning sandbox.
-- Current proposed implementation item: `WI-INTERACT-0001`.
-- Completed foundations: project-owned scene rendering, downstream Velumin browser rendering, opt-in render smoke artifacts, deterministic parent-probe motion, and deterministic replay artifacts.
-- Rendering and simulation evidence: `EV-0004`, `EV-0005`, `EV-0006`, `EV-0007`, and `EV-0008`.
+- Current focus: `FOCUS-MINING-0001`, the first mining and matter resource slice.
+- Current proposed implementation item: `WI-MINING-0001`.
+- Completed foundations: project-owned scene rendering, downstream Velumin browser rendering, opt-in render smoke artifacts, deterministic parent-probe motion, deterministic replay artifacts, and a controllable parent-probe tuning sandbox.
+- Rendering and simulation evidence: `EV-0004`, `EV-0005`, `EV-0006`, `EV-0007`, `EV-0008`, and `EV-0009`.
 
 ## Directory Guide
 
