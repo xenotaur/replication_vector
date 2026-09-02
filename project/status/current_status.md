@@ -9,7 +9,7 @@ health: yellow
 # Current Status
 
 ## Summary
-- Replication Vector now has a narrow controllable parent-probe tuning sandbox in review.
+- Replication Vector now has a narrow controllable parent-probe tuning sandbox landed and closed out.
 - The repository now has an LRH control-plane scaffold, Velumin-style guidance, canonical validation scripts, CI, and a minimal Rust/WASM/Vite skeleton.
 - The first project-owned scene is now expressed as Velumin `VectorCommand` data and validated by focused Rust tests.
 - The updated Velumin API appears to provide a downstream browser frame path via `VectorFrame` and `WebGPU.renderFrame(frame)`.
@@ -18,8 +18,9 @@ health: yellow
 - The first deterministic Rust parent-probe motion model now exists with focused tests.
 - `FOCUS-REPLAY-0001` authorized deterministic parent-probe motion replay through Velumin with inspectable PNG/JSON capture artifacts and is now complete.
 - `WI-REPLAY-0001` is resolved: the deterministic motion model now renders through the Velumin browser harness and saves local replay artifacts.
-- `FOCUS-INTERACT-0001` now authorizes a best-effort controllable parent-probe tuning sandbox for keyboard thrust/turn input and weight/inertia/responsiveness sliders.
-- `WI-INTERACT-0001` is active in review: the sandbox route drives Rust parent-probe motion with keyboard input and tuning sliders, renders through Velumin, and saves opt-in sandbox smoke artifacts.
+- `FOCUS-INTERACT-0001` is complete: `WI-INTERACT-0001` resolved the sandbox route that drives Rust parent-probe motion with keyboard input and tuning sliders, renders through Velumin, and saves opt-in sandbox smoke artifacts.
+- `FOCUS-MINING-0001` now authorizes the next narrow Phase 2 slice: one primary matter resource and a deterministic mining interaction.
+- `WI-MINING-0001` is proposed for the first mining beam and matter resource model.
 - The game concept is well described by the supplied design summary and lightly corroborated by `README.md`.
 
 ## Evidence Basis
@@ -41,17 +42,17 @@ health: yellow
 
 ## Active Priorities
 - Keep validation aligned with the Velumin-compatible script contract.
-- Land or review `WI-INTERACT-0001` before expanding into mining, shields, enemies, or child-probe behavior.
-- Keep the tuning sandbox narrow, developer-facing, and sourced from the Rust simulation model where practical.
+- Refine and execute `WI-MINING-0001` before expanding into shields, enemies, child-probe behavior, scoring, or progression.
+- Keep the first mining/resource slice narrow, deterministic, and sourced from the Rust simulation model where practical.
 
 ## Risks
 - Scope creep into campaign, tech tree, and content systems before the core loop is proven.
 - Passive player feel if the heavy probe lacks frequent tactical actions.
 - Visual clutter from vector shields, asteroids, beams, particles, projectiles, enemies, and UI.
 - Velumin checkout and npm setup can fail in fresh environments until `scripts/develop` succeeds.
-- The tuning sandbox could drift into production UI or gameplay systems if not kept explicitly scoped.
+- The mining slice could drift into production economy, collision, or UI if not kept explicitly scoped.
 
 ## Recommended Next Actions
-1. Complete review and closeout for `WI-INTERACT-0001`.
-2. Keep mining, asteroid collision, shields, enemies, child-probe behavior, scoring, and progression blocked until future explicit work items authorize them.
-3. After the sandbox lands, decide whether to proceed breadth-first into mining design or depth-first into more capture/evidence for interactive tuning.
+1. Review and land the control-plane update that closes `FOCUS-INTERACT-0001` and proposes `WI-MINING-0001`.
+2. Run readiness on `WI-MINING-0001` and refine it if needed before implementation.
+3. Keep asteroid collision, shields, enemies, child-probe behavior, scoring, and progression blocked until future explicit work items authorize them.
