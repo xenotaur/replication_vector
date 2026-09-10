@@ -17,13 +17,14 @@
 10. `project/memory/decision_log.md`
 
 ## Current Operating Context
-- Current focus is `FOCUS-INTERACT-0001`: add a controllable parent-probe tuning sandbox for keyboard thrust/turn input and weight/inertia/responsiveness sliders.
+- Current focus is `FOCUS-MINING-0001`: prove one deterministic matter resource and mining interaction while preserving the completed motion, replay, and tuning paths.
 - The repository has root guidance files, canonical scripts, CI, and a minimal Rust/WASM/Vite skeleton.
 - Velumin is consumed through a scripted checkout at `.deps/velumin`; run `scripts/develop` when setup is missing.
 - The intended implementation should consume Velumin as the rendering package/library; do not introduce an alternate rendering stack without an explicit design decision.
 - The rendering spike is complete: `WI-RENDER-0001`, `WI-RENDER-0002`, and `WI-SMOKE-0001` are resolved.
 - `EV-0004` proves the first project-owned scene exists as Velumin `VectorCommand` data; `EV-0005` proves downstream Velumin browser rendering through `VectorFrame` and `WebGPU.renderFrame(frame)`; `EV-0006` proves the opt-in `scripts/render-smoke` artifact path.
-- `WI-INTERACT-0001` is the proposed next implementation item; move it to `active` only when beginning the controllable tuning sandbox.
+- `FOCUS-INTERACT-0001`, `WI-INTERACT-0001`, and `WS-INTERACT-0001` are complete; `EV-0009` is the closeout evidence.
+- `WI-MINING-0001` is the proposed next implementation item; move it to `active` only when beginning the mining/resource slice.
 
 ## Execution Constraints
 - Keep work narrow and evidence-backed.
@@ -35,5 +36,5 @@
 - High confidence: project identity is Replication Vector / `replication_vector`; the game direction comes from the supplied design summary and README.
 - High confidence: `DP-0001` adopts the Velumin-style infrastructure and scripted checkout dependency shape.
 - High confidence: the first project-owned scene, downstream Velumin browser rendering, and opt-in render smoke artifact path already exist.
-- Medium confidence: the next authorized slice is the live parent-probe tuning sandbox, but exact keyboard-control feel and slider mapping still need implementation evidence.
+- Medium confidence: the next authorized slice is the first mining/resource model, but exact mining range, transfer, depletion, and capacity behavior still need implementation evidence.
 - Low confidence: owner assignments and precise future gameplay behavior beyond the current focus.

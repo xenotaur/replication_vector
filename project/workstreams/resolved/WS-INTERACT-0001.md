@@ -2,8 +2,8 @@
 id: WS-INTERACT-0001
 title: Controllable parent-probe tuning sandbox
 kind: planning_node
-status: proposed
-stage: planned
+status: resolved
+stage: closed
 priority: high
 owner: project maintainers
 created: 2026-08-22
@@ -18,7 +18,8 @@ related_design:
   - project/design/proposals/adopted/DP-0003-parent-probe-motion-model.md
 work_items:
   - WI-INTERACT-0001
-evidence: []
+evidence:
+  - EV-0009
 ---
 
 # WS-INTERACT-0001: Controllable Parent-Probe Tuning Sandbox
@@ -26,15 +27,15 @@ evidence: []
 ## Purpose
 Coordinate the narrow interactivity stream that turns the deterministic parent-probe motion model into a live, opt-in browser tuning sandbox through the existing Velumin harness.
 
-## Stub Scope
-- Backfilled to give `WI-INTERACT-0001` a workstream anchor before execution begins.
+## Scope
+- Backfilled to give `WI-INTERACT-0001` a workstream anchor before execution began.
 - Covers live keyboard thrust/turn, developer-facing tuning sliders, static asteroid spatial context, documentation, and browser evidence authorized by `FOCUS-INTERACT-0001`.
 - Does not expand into mining, collision, shields, enemies, child-probe construction, scoring, progression, production UI, or CI visual gates.
 
-## Current Work
-- `WI-INTERACT-0001` is the proposed implementation item for this stream.
+## Completed Work
+- `WI-INTERACT-0001` is resolved in `project/work_items/resolved/`.
+- `EV-0009` records the browser/WebGPU smoke evidence for keyboard motion, tuning sliders, and the retained render paths.
 
-## Notes for Controlling Session
-- Flesh out sequencing, acceptance notes, and closeout criteria before or during execution.
-- Keep the stream grounded in adopted `DP-0003`; the sandbox should reuse the existing Rust motion model instead of duplicating motion logic in browser JavaScript.
-- Record evidence for live keyboard motion through Velumin before moving this workstream out of `proposed`.
+## Closeout Notes
+- The stream stayed within adopted `DP-0003` and reused the Rust motion model instead of duplicating motion logic in browser JavaScript.
+- The interaction focus is complete; the next authorized stream is the mining/resource slice under `FOCUS-MINING-0001`.

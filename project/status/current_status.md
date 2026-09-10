@@ -19,6 +19,7 @@ health: yellow
 - `FOCUS-REPLAY-0001` authorized deterministic parent-probe motion replay through Velumin with inspectable PNG/JSON capture artifacts and is now complete.
 - `WI-REPLAY-0001` is resolved: the deterministic motion model now renders through the Velumin browser harness and saves local replay artifacts.
 - `FOCUS-INTERACT-0001` is complete: `WI-INTERACT-0001` resolved the sandbox route that drives Rust parent-probe motion with keyboard input and tuning sliders, renders through Velumin, and saves opt-in sandbox smoke artifacts.
+- `WS-INTERACT-0001` is closed with `EV-0009` as its completion evidence.
 - `FOCUS-MINING-0001` now authorizes the next narrow Phase 2 slice: one primary matter resource and a deterministic mining interaction.
 - `WI-MINING-0001` is proposed for the first mining beam and matter resource model.
 - The game concept is well described by the supplied design summary and lightly corroborated by `README.md`.
@@ -53,6 +54,6 @@ health: yellow
 - The mining slice could drift into production economy, collision, or UI if not kept explicitly scoped.
 
 ## Recommended Next Actions
-1. Review and land the control-plane update that closes `FOCUS-INTERACT-0001` and proposes `WI-MINING-0001`.
-2. Run readiness on `WI-MINING-0001` and refine it if needed before implementation.
+1. Run readiness on `WI-MINING-0001` and refine it if needed before implementation.
+2. Execute the first mining/resource slice under `FOCUS-MINING-0001`.
 3. Keep asteroid collision, shields, enemies, child-probe behavior, scoring, and progression blocked until future explicit work items authorize them.
