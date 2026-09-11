@@ -2,7 +2,7 @@
 execution_id: 2026_09_11_07_39_36_CLOSE_INTERACT_WORKSTREAM_CLOSEOUT
 prompt_id: PROMPT(AD_HOC:CLOSE_INTERACT_WORKSTREAM_CLOSEOUT)[2026-09-11T07:39:06+00:00]
 work_item: AD_HOC
-status: in_progress
+status: landed
 rerun_of:
 pr: https://github.com/xenotaur/replication_vector/pull/20
 commit: 7ab2fd0e24984f3a88eb8a5313cdc160077f4300
