@@ -5,7 +5,7 @@ work_item: AD_HOC
 status: in_progress
 rerun_of:
 pr: https://github.com/xenotaur/replication_vector/pull/20
-commit: 
+commit:
 agent: codex_app
 instruction_source: https://github.com/xenotaur/replication_vector/pull/20
 session_transcript: pending
