@@ -2,13 +2,13 @@
 execution_id: 2026_09_11_07_04_10_CLOSE_INTERACT_WORKSTREAM_CONFIRM
 prompt_id: PROMPT(AD_HOC:CLOSE_INTERACT_WORKSTREAM_CONFIRM)[2026-09-11T05:52:52+00:00]
 work_item: AD_HOC
-status: in_progress
+status: landed
 rerun_of:
 pr: https://github.com/xenotaur/replication_vector/pull/20
-commit:
+commit: 7ab2fd0e24984f3a88eb8a5313cdc160077f4300
 agent: codex_app
 instruction_source: https://github.com/xenotaur/replication_vector/pull/20
-session_transcript: pending
+session_transcript: codex-app:01a08cb2-85cd-7a41-a600-fc0f2e481e2b
 created_at: 2026-09-11T07:04:10+00:00
 ---
 
