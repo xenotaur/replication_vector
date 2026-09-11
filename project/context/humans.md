@@ -10,7 +10,7 @@
 
 ## Goals and Direction
 - Goal: build a tight vector arcade survival game and Velumin downstream validation project.
-- Near-term focus: expose a controllable parent-probe tuning sandbox through the existing Rust simulation model and Velumin render path, then use that evidence to guide the playable core loop.
+- Near-term focus: prove the first deterministic mining/resource slice through the existing Rust simulation model and Velumin render path, building on the completed tuning sandbox.
 - Core loop: arrive, mine, defend, allocate matter, build child probe, launch, continue as successor.
 
 ## Design Snapshot
@@ -22,18 +22,19 @@
 
 ## Current Status Snapshot
 - Health: yellow.
-- Concept direction and repository infrastructure are established, and the active focus is now `FOCUS-INTERACT-0001`.
+- Concept direction and repository infrastructure are established, and the active focus is now `FOCUS-MINING-0001`.
 - The repository now includes Velumin-style guidance files, canonical scripts, CI, and a minimal Rust/WASM/Vite skeleton.
 - `DP-0001` records the adopted decision to consume Velumin through a scripted checkout at `.deps/velumin`.
 - The rendering spike is complete: `WI-RENDER-0001`, `WI-RENDER-0002`, and `WI-SMOKE-0001` are resolved, with evidence in `EV-0004`, `EV-0005`, and `EV-0006`.
 - The first project-owned scene already exists as Velumin `VectorCommand` data, downstream Velumin browser rendering already exists through `WebGPU.renderFrame(frame)`, and an opt-in `scripts/render-smoke` artifact path already saves local PNG/JSON captures under `replication_vector/web/smoke-out/`.
-- `WI-INTERACT-0001` is the current proposed next implementation work item.
+- `FOCUS-INTERACT-0001` and `WI-INTERACT-0001` are complete; `EV-0009` records the controllable sandbox evidence and `WS-INTERACT-0001` is closed.
+- `WI-MINING-0001` is the current proposed next implementation work item under `FOCUS-MINING-0001`.
 
 ## Known Unknowns
 - Packaged game target beyond the current Rust/WASM/Vite browser harness.
 - Human ownership and review responsibilities.
 - Exact mining interaction, child-probe placement, inheritance rules, launch thresholds, and render-test strategy.
-- Exact live-input feel for the slow, heavy parent probe under keyboard control and tuning sliders.
+- Exact mining range, transfer rate, and matter-capacity feel for the first resource slice.
 - Moral/narrative framing of the self-replicating probe.
 
 ## Notes
