@@ -3,7 +3,7 @@ execution_id: 2026_09_11_07_19_08_CLOSE_INTERACT_WORKSTREAM_CONFIRM
 prompt_id: PROMPT(AD_HOC:CLOSE_INTERACT_WORKSTREAM_CONFIRM)[2026-09-11T07:19:00+00:00]
 work_item: AD_HOC
 status: in_progress
-rerun_of:
+rerun_of: 2026_09_11_07_04_10_CLOSE_INTERACT_WORKSTREAM_CONFIRM
 pr: https://github.com/xenotaur/replication_vector/pull/20
 commit:
 agent: codex_app

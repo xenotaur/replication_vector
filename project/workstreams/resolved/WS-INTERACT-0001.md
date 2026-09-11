@@ -20,6 +20,11 @@ work_items:
   - WI-INTERACT-0001
 evidence:
   - EV-0009
+exit_criteria:
+  - WI-INTERACT-0001 is resolved.
+  - EV-0009 records the controllable sandbox browser/WebGPU evidence.
+  - The static scene, replay path, and tuning sandbox remain available.
+  - LRH validation passes with no control-plane errors or warnings.
 ---
 
 # WS-INTERACT-0001: Controllable Parent-Probe Tuning Sandbox
