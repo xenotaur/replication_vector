@@ -21,7 +21,7 @@ health: yellow
 - `FOCUS-INTERACT-0001` is complete: `WI-INTERACT-0001` resolved the sandbox route that drives Rust parent-probe motion with keyboard input and tuning sliders, renders through Velumin, and saves opt-in sandbox smoke artifacts.
 - `WS-INTERACT-0001` is closed with `EV-0009` as its completion evidence.
 - `FOCUS-MINING-0001` now authorizes the next narrow Phase 2 slice: one primary matter resource and a deterministic mining interaction.
-- `WI-MINING-0001` is active: its first Rust-owned matter resource and deterministic mining boundary are implemented locally and moving through validation and review.
+- `WI-MINING-0001` is resolved in PR #21: its first Rust-owned matter resource and deterministic mining boundary are implemented and evidenced, pending merge closeout.
 - The game concept is well described by the supplied design summary and lightly corroborated by `README.md`.
 
 ## Evidence Basis

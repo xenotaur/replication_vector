@@ -103,9 +103,9 @@ pub struct MatterStorage {
 
 impl MatterStorage {
     pub fn new(amount: f32, capacity: f32) -> Self {
-        let capacity = capacity.max(0.0);
+        let capacity = non_negative_finite(capacity);
         Self {
-            amount: amount.clamp(0.0, capacity),
+            amount: non_negative_finite(amount).min(capacity),
             capacity,
         }
     }
@@ -260,9 +260,9 @@ pub fn step_mining(
     config: MiningConfig,
     delta_seconds: f32,
 ) -> MiningStepResult {
-    parent_matter.capacity = parent_matter.capacity.max(0.0);
-    parent_matter.amount = parent_matter.amount.clamp(0.0, parent_matter.capacity);
-    source.matter = source.matter.max(0.0);
+    parent_matter.capacity = non_negative_finite(parent_matter.capacity);
+    parent_matter.amount = non_negative_finite(parent_matter.amount).min(parent_matter.capacity);
+    source.matter = non_negative_finite(source.matter);
 
     let range = config.range.max(0.0);
     let in_range = (source.position - parent_probe.position).length_squared() <= range * range;
@@ -284,6 +284,14 @@ pub fn step_mining(
         extracted_matter,
         source_matter_remaining: source.matter,
         parent_matter: parent_matter.amount,
+    }
+}
+
+fn non_negative_finite(value: f32) -> f32 {
+    if value.is_finite() {
+        value.max(0.0)
+    } else {
+        0.0
     }
 }
 
@@ -785,6 +793,32 @@ mod tests {
         assert_eq!(result.extracted_matter, 0.0);
         assert_eq!(source.matter, 0.0);
         assert_eq!(parent_matter.amount, 0.0);
+    }
+
+    #[test]
+    fn mining_normalizes_nan_storage_state_without_creating_matter() {
+        let mut source = MiningSource {
+            position: SimVec2::ZERO,
+            matter: f32::NAN,
+        };
+        let mut parent_matter = MatterStorage {
+            amount: f32::NAN,
+            capacity: f32::NAN,
+        };
+
+        let result = step_mining(
+            ParentProbeState::default(),
+            MiningInput::default(),
+            &mut source,
+            &mut parent_matter,
+            MiningConfig::default(),
+            1.0,
+        );
+
+        assert_eq!(result.extracted_matter, 0.0);
+        assert_eq!(source.matter, 0.0);
+        assert_eq!(parent_matter.amount, 0.0);
+        assert_eq!(parent_matter.capacity, 0.0);
     }
 
     #[test]

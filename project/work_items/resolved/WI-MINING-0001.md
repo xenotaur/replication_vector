@@ -2,13 +2,13 @@
 id: WI-MINING-0001
 title: Add first mining beam and matter resource model
 type: deliverable
-status: active
+status: resolved
 priority: high
 owner: project maintainers
 created: 2026-09-02
 blocked: false
 blocked_reason: null
-resolution: null
+resolution: "Implemented deterministic Rust matter-resource mining boundary; see EV-0010 and PR #21."
 related_focus:
   - FOCUS-MINING-0001
 related_roadmap:
