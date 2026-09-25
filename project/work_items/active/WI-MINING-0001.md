@@ -2,7 +2,7 @@
 id: WI-MINING-0001
 title: Add first mining beam and matter resource model
 type: deliverable
-status: proposed
+status: active
 priority: high
 owner: project maintainers
 created: 2026-09-02

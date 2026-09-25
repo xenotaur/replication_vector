@@ -21,7 +21,7 @@ health: yellow
 - `FOCUS-INTERACT-0001` is complete: `WI-INTERACT-0001` resolved the sandbox route that drives Rust parent-probe motion with keyboard input and tuning sliders, renders through Velumin, and saves opt-in sandbox smoke artifacts.
 - `WS-INTERACT-0001` is closed with `EV-0009` as its completion evidence.
 - `FOCUS-MINING-0001` now authorizes the next narrow Phase 2 slice: one primary matter resource and a deterministic mining interaction.
-- `WI-MINING-0001` is proposed for the first mining beam and matter resource model.
+- `WI-MINING-0001` is active: its first Rust-owned matter resource and deterministic mining boundary are implemented locally and moving through validation and review.
 - The game concept is well described by the supplied design summary and lightly corroborated by `README.md`.
 
 ## Evidence Basis
@@ -35,15 +35,16 @@ health: yellow
 - `EV-0007` records the deterministic parent-probe motion model and focused test coverage.
 - `EV-0008` records the deterministic parent-probe replay artifact path.
 - `EV-0009` records the controllable parent-probe tuning sandbox and browser/WebGPU smoke evidence.
+- `EV-0010` records the first deterministic matter-resource mining boundary and validation/browser evidence for the active implementation.
 - `DP-0001` records the adopted decision to use a scripted Velumin checkout and minimal Rust/WASM/Vite skeleton.
 - `DP-0003` records the adopted deterministic parent-probe motion model.
 
 ## Current Health
-- Yellow: strong concept/design direction, repository infrastructure, Velumin-rendered scene/replay/sandbox paths, opt-in local render artifacts, and the first controllable parent-probe motion slice exist, but no mining, shield, enemy, child-probe, or launch loop exists yet.
+- Yellow: the first Rust-owned matter-resource boundary now exists locally with focused tests, while no landed mining browser loop, shields, enemies, child-probe, or launch loop exists yet.
 
 ## Active Priorities
 - Keep validation aligned with the Velumin-compatible script contract.
-- Refine and execute `WI-MINING-0001` before expanding into shields, enemies, child-probe behavior, scoring, or progression.
+- Validate and land `WI-MINING-0001` before expanding into shields, enemies, child-probe behavior, scoring, or progression.
 - Keep the first mining/resource slice narrow, deterministic, and sourced from the Rust simulation model where practical.
 
 ## Risks
@@ -54,6 +55,6 @@ health: yellow
 - The mining slice could drift into production economy, collision, or UI if not kept explicitly scoped.
 
 ## Recommended Next Actions
-1. Run readiness on `WI-MINING-0001` and refine it if needed before implementation.
-2. Execute the first mining/resource slice under `FOCUS-MINING-0001`.
+1. Complete review and land `WI-MINING-0001`, including its evidence and execution records.
+2. Keep the matter boundary deterministic and simulation-owned if follow-up browser affordances are proposed.
 3. Keep asteroid collision, shields, enemies, child-probe behavior, scoring, and progression blocked until future explicit work items authorize them.

@@ -129,3 +129,14 @@ replication_vector/web/smoke-out/sandbox.json
 ```
 
 The JSON metadata includes the latest sandbox state, keyboard input, slider values, command count, viewport, Velumin checkout, and artifact path. Like the other render smoke commands, this is opt-in, writes only ignored local artifacts, and reports a clear `SKIP` when Playwright Chromium or WebGPU support is unavailable.
+
+### Mining and matter simulation
+
+The first mining slice is intentionally Rust-only. Run the ordinary test and validation commands to exercise the deterministic matter transfer boundary:
+
+```sh
+scripts/test
+lrh validate
+```
+
+The Rust simulation models one `matter` resource, a range-gated mining input, a source reserve, and parent storage capacity. Active mining transfers at the configured rate for the fixed timestep, then clamps to the remaining source and available parent capacity. Inactive or out-of-range mining transfers nothing. The existing `?scene=sandbox` browser route and `scripts/render-sandbox-smoke` remain available for parent-probe and static-asteroid Velumin inspection; this slice does not add browser mining UI or a new renderer.
