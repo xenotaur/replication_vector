@@ -54,6 +54,17 @@ impl std::ops::AddAssign for SimVec2 {
     }
 }
 
+impl std::ops::Sub for SimVec2 {
+    type Output = Self;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        Self {
+            x: self.x - rhs.x,
+            y: self.y - rhs.y,
+        }
+    }
+}
+
 impl std::ops::Mul<f32> for SimVec2 {
     type Output = Self;
 
@@ -82,6 +93,55 @@ impl Default for ParentProbeState {
             angular_velocity_radians_per_second: 0.0,
         }
     }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct MatterStorage {
+    pub amount: f32,
+    pub capacity: f32,
+}
+
+impl MatterStorage {
+    pub fn new(amount: f32, capacity: f32) -> Self {
+        let capacity = non_negative_finite(capacity);
+        Self {
+            amount: non_negative_finite(amount).min(capacity),
+            capacity,
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct MiningSource {
+    pub position: SimVec2,
+    pub matter: f32,
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub struct MiningInput {
+    pub active: bool,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct MiningConfig {
+    pub range: f32,
+    pub matter_per_second: f32,
+}
+
+impl Default for MiningConfig {
+    fn default() -> Self {
+        Self {
+            range: 0.75,
+            matter_per_second: 0.5,
+        }
+    }
+}
+
+#[derive(Clone, Copy, Debug, Default, PartialEq)]
+pub struct MiningStepResult {
+    pub extracted_matter: f32,
+    pub source_matter_remaining: f32,
+    pub parent_matter: f32,
 }
 
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
@@ -190,6 +250,49 @@ pub fn step_parent_probe_motion_with_tuning(
         parent_probe_motion_config_from_tuning(sliders),
         delta_seconds.clamp(0.0, 0.05),
     )
+}
+
+pub fn step_mining(
+    parent_probe: ParentProbeState,
+    input: MiningInput,
+    source: &mut MiningSource,
+    parent_matter: &mut MatterStorage,
+    config: MiningConfig,
+    delta_seconds: f32,
+) -> MiningStepResult {
+    parent_matter.capacity = non_negative_finite(parent_matter.capacity);
+    parent_matter.amount = non_negative_finite(parent_matter.amount).min(parent_matter.capacity);
+    source.matter = non_negative_finite(source.matter);
+
+    let range = config.range.max(0.0);
+    let in_range = (source.position - parent_probe.position).length_squared() <= range * range;
+    let available_capacity = (parent_matter.capacity - parent_matter.amount).max(0.0);
+    let requested = config.matter_per_second.max(0.0) * delta_seconds.max(0.0);
+
+    let extracted_matter = if input.active && in_range {
+        requested
+            .min(source.matter.max(0.0))
+            .min(available_capacity)
+    } else {
+        0.0
+    };
+
+    source.matter = (source.matter - extracted_matter).max(0.0);
+    parent_matter.amount = (parent_matter.amount + extracted_matter).min(parent_matter.capacity);
+
+    MiningStepResult {
+        extracted_matter,
+        source_matter_remaining: source.matter,
+        parent_matter: parent_matter.amount,
+    }
+}
+
+fn non_negative_finite(value: f32) -> f32 {
+    if value.is_finite() {
+        value.max(0.0)
+    } else {
+        0.0
+    }
 }
 
 pub fn deterministic_parent_probe_replay() -> ParentProbeReplay {
@@ -575,5 +678,170 @@ mod tests {
         let second = deterministic_parent_probe_replay();
 
         assert_eq!(first, second);
+    }
+
+    #[test]
+    fn mining_transfers_matter_when_active_and_in_range() {
+        let mut source = MiningSource {
+            position: SimVec2::new(0.5, 0.0),
+            matter: 2.0,
+        };
+        let mut parent_matter = MatterStorage::new(0.0, 1.0);
+
+        let result = step_mining(
+            ParentProbeState::default(),
+            MiningInput { active: true },
+            &mut source,
+            &mut parent_matter,
+            MiningConfig::default(),
+            0.2,
+        );
+
+        assert_close(result.extracted_matter, 0.1);
+        assert_close(source.matter, 1.9);
+        assert_close(parent_matter.amount, 0.1);
+    }
+
+    #[test]
+    fn mining_does_not_transfer_when_inactive_or_out_of_range() {
+        let mut source = MiningSource {
+            position: SimVec2::new(0.5, 0.0),
+            matter: 2.0,
+        };
+        let mut parent_matter = MatterStorage::new(0.0, 1.0);
+
+        let inactive = step_mining(
+            ParentProbeState::default(),
+            MiningInput::default(),
+            &mut source,
+            &mut parent_matter,
+            MiningConfig::default(),
+            1.0,
+        );
+        assert_eq!(inactive.extracted_matter, 0.0);
+
+        source.position = SimVec2::new(0.76, 0.0);
+        let out_of_range = step_mining(
+            ParentProbeState::default(),
+            MiningInput { active: true },
+            &mut source,
+            &mut parent_matter,
+            MiningConfig::default(),
+            1.0,
+        );
+        assert_eq!(out_of_range.extracted_matter, 0.0);
+        assert_close(source.matter, 2.0);
+        assert_close(parent_matter.amount, 0.0);
+    }
+
+    #[test]
+    fn mining_clamps_to_source_depletion_and_parent_capacity() {
+        let mut source = MiningSource {
+            position: SimVec2::ZERO,
+            matter: 0.05,
+        };
+        let mut parent_matter = MatterStorage::new(0.18, 0.2);
+
+        let result = step_mining(
+            ParentProbeState::default(),
+            MiningInput { active: true },
+            &mut source,
+            &mut parent_matter,
+            MiningConfig::default(),
+            1.0,
+        );
+
+        assert_close(result.extracted_matter, 0.02);
+        assert_close(source.matter, 0.03);
+        assert_close(parent_matter.amount, 0.2);
+
+        let depleted = step_mining(
+            ParentProbeState::default(),
+            MiningInput { active: true },
+            &mut MiningSource {
+                position: SimVec2::ZERO,
+                matter: 0.03,
+            },
+            &mut MatterStorage::new(0.0, 1.0),
+            MiningConfig::default(),
+            1.0,
+        );
+        assert_close(depleted.extracted_matter, 0.03);
+        assert_close(depleted.source_matter_remaining, 0.0);
+    }
+
+    #[test]
+    fn mining_normalizes_public_storage_state_at_the_boundary() {
+        let mut source = MiningSource {
+            position: SimVec2::ZERO,
+            matter: -1.0,
+        };
+        let mut parent_matter = MatterStorage {
+            amount: -1.0,
+            capacity: 1.0,
+        };
+
+        let result = step_mining(
+            ParentProbeState::default(),
+            MiningInput::default(),
+            &mut source,
+            &mut parent_matter,
+            MiningConfig::default(),
+            1.0,
+        );
+
+        assert_eq!(result.extracted_matter, 0.0);
+        assert_eq!(source.matter, 0.0);
+        assert_eq!(parent_matter.amount, 0.0);
+    }
+
+    #[test]
+    fn mining_normalizes_nan_storage_state_without_creating_matter() {
+        let mut source = MiningSource {
+            position: SimVec2::ZERO,
+            matter: f32::NAN,
+        };
+        let mut parent_matter = MatterStorage {
+            amount: f32::NAN,
+            capacity: f32::NAN,
+        };
+
+        let result = step_mining(
+            ParentProbeState::default(),
+            MiningInput::default(),
+            &mut source,
+            &mut parent_matter,
+            MiningConfig::default(),
+            1.0,
+        );
+
+        assert_eq!(result.extracted_matter, 0.0);
+        assert_eq!(source.matter, 0.0);
+        assert_eq!(parent_matter.amount, 0.0);
+        assert_eq!(parent_matter.capacity, 0.0);
+    }
+
+    #[test]
+    fn repeated_mining_steps_are_deterministic() {
+        fn run_sequence() -> (MiningSource, MatterStorage) {
+            let mut source = MiningSource {
+                position: SimVec2::new(0.25, -0.1),
+                matter: 4.0,
+            };
+            let mut parent_matter = MatterStorage::new(0.0, 2.0);
+            for _ in 0..12 {
+                step_mining(
+                    ParentProbeState::default(),
+                    MiningInput { active: true },
+                    &mut source,
+                    &mut parent_matter,
+                    MiningConfig::default(),
+                    1.0 / 30.0,
+                );
+            }
+            (source, parent_matter)
+        }
+
+        assert_eq!(run_sequence(), run_sequence());
     }
 }
