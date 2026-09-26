@@ -50,5 +50,5 @@ owner: project maintainers
 - `FOCUS-SIM-0001` and `WI-SIM-0001` completed the first deterministic parent-probe simulation slice.
 - `FOCUS-REPLAY-0001` and `WI-REPLAY-0001` completed the narrow depth-first replay evidence slice before broader gameplay expansion.
 - `FOCUS-INTERACT-0001` and `WI-INTERACT-0001` completed the narrow interactivity slice: controllable parent-probe motion tuning before mining, shields, enemies, or child-probe behavior.
-- `FOCUS-MINING-0001` and resolved `WI-MINING-0001` bind the current narrow Phase 2 slice: one primary matter resource and deterministic mining behavior before shields, enemies, child-probe behavior, scoring, or progression.
+- Completed `FOCUS-MINING-0001` and resolved `WI-MINING-0001` establish the first narrow Phase 2 slice: one primary matter resource and deterministic mining behavior before shields, enemies, child-probe behavior, scoring, or progression. The next Phase 2 focus remains to be selected explicitly.
 - Simple enemy silhouettes remain deferred until enemy pressure or a future explicit rendering work item is selected.

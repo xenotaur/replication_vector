@@ -8,7 +8,7 @@ owner: project maintainers
 created: 2026-09-02
 blocked: false
 blocked_reason: null
-resolution: "Implemented deterministic Rust matter-resource mining boundary; see EV-0010 and PR #21."
+resolution: "Implemented and merged in PR #21 (merge commit f43a55d); see EV-0010."
 related_focus:
   - FOCUS-MINING-0001
 related_roadmap:
