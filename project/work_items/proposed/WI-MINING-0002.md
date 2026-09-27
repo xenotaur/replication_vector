@@ -39,7 +39,7 @@ acceptance:
   - Browser keyboard input activates and deactivates mining through the existing Rust mining boundary.
   - A resource-bearing asteroid/source and mining beam are rendered through Velumin during active in-range mining.
   - Matter transfer and source depletion remain authoritative in Rust rather than duplicated in JavaScript.
-  - Browser smoke or replay evidence records active mining, inactive mining, and depleted-source behavior.
+  - Browser smoke or replay evidence records active in-range mining, inactive mining, out-of-range no-op behavior, and depleted-source behavior.
   - Existing static scene, replay, and parent-probe tuning sandbox paths remain available.
   - Focused Rust/browser validation and documentation pass.
 required_evidence:
@@ -88,8 +88,8 @@ Add the smallest browser-facing mining interaction on top of the Rust-owned matt
 1. Extend the existing Rust/WASM boundary with the smallest input/state adapter needed to invoke `step_mining(...)` from the browser harness.
 2. Add keyboard mining input with clear active/inactive behavior and no JavaScript copy of transfer or depletion rules.
 3. Add project-owned Velumin commands for the resource-bearing source and mining beam, preserving the existing parent probe and static scene paths.
-4. Add focused tests for input mapping, active/inactive behavior, and any new boundary helper; retain the existing Rust mining tests.
-5. Add an opt-in browser smoke or replay command that captures active mining, inactive mining, and depleted-source behavior as PNG/JSON or equivalent inspectable artifacts.
+4. Add focused tests for input mapping, active/inactive behavior, out-of-range no-op behavior, and any new boundary helper; retain the existing Rust mining tests.
+5. Add an opt-in browser smoke or replay command that captures active in-range mining, inactive mining, out-of-range no-op behavior, and depleted-source behavior as PNG/JSON or equivalent inspectable artifacts.
 6. Update `scripts/README.md` with the command and controls.
 7. Create an evidence record under `project/evidence/` describing the browser/WebGPU behavior, validation, and any setup skip or blocker.
 
@@ -104,7 +104,7 @@ Add the smallest browser-facing mining interaction on top of the Rust-owned matt
 - Browser keyboard input activates and deactivates mining through the existing Rust mining boundary.
 - A resource-bearing asteroid/source and mining beam render through Velumin during active in-range mining.
 - Matter transfer and source depletion remain authoritative in Rust rather than duplicated in JavaScript.
-- Browser smoke or replay evidence records active mining, inactive mining, and depleted-source behavior.
+- Browser smoke or replay evidence records active in-range mining, inactive mining, out-of-range no-op behavior, and depleted-source behavior.
 - Existing static scene, replay, and parent-probe tuning sandbox paths remain available.
 - Focused Rust/browser validation and documentation pass.
 - No out-of-scope gameplay systems are added.
