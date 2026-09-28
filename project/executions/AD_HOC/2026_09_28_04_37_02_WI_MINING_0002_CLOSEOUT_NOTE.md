@@ -2,10 +2,10 @@
 execution_id: 2026_09_28_04_37_02_WI_MINING_0002_CLOSEOUT_NOTE
 prompt_id: PROMPT(AD_HOC:WI_MINING_0002_CLOSEOUT_NOTE)[2026-09-28T04:37:02+00:00]
 work_item: AD_HOC
-status: in_progress
+status: landed
 rerun_of: 2026_09_27_00_12_20_WI_MINING_0002
 pr: https://github.com/xenotaur/replication_vector/pull/22
-commit: d13147f99c829762472cc5bb1fcd481a54cb5003
+commit: 7b8e1ab
 agent: codex_app
 instruction_source: project/work_items/resolved/WI-MINING-0002.md
 session_transcript: codex-app:01a02a73-73e9-7df0-902c-b8b6e2c0733f
