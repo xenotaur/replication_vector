@@ -2,13 +2,13 @@
 id: WI-MINING-0002
 title: Add browser mining interaction and resource feedback
 type: deliverable
-status: resolved
+status: active
 priority: high
 owner: project maintainers
 created: 2026-09-26
 blocked: false
 blocked_reason: null
-resolution: "Planning scope for browser mining interaction and resource feedback was captured and merged in PR #22 (merge commit d13147f); implementation remains deferred to a future execution."
+resolution: null
 related_focus:
   []
 related_roadmap:
