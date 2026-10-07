@@ -10,7 +10,7 @@ blocked: false
 blocked_reason: null
 resolution: null
 related_focus:
-  []
+  - FOCUS-MINING-0002
 related_roadmap:
   - ROADMAP-INITIAL
 related_workstreams: []

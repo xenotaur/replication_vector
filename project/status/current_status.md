@@ -20,8 +20,10 @@ health: yellow
 - `WI-REPLAY-0001` is resolved: the deterministic motion model now renders through the Velumin browser harness and saves local replay artifacts.
 - `FOCUS-INTERACT-0001` is complete: `WI-INTERACT-0001` resolved the sandbox route that drives Rust parent-probe motion with keyboard input and tuning sliders, renders through Velumin, and saves opt-in sandbox smoke artifacts.
 - `WS-INTERACT-0001` is closed with `EV-0009` as its completion evidence.
-- `FOCUS-MINING-0001` now authorizes the next narrow Phase 2 slice: one primary matter resource and a deterministic mining interaction.
+- `FOCUS-MINING-0001` is complete: it established the first Rust-owned matter-resource boundary.
 - `WI-MINING-0001` is resolved and landed in PR #21 (merge commit `f43a55d`): its first Rust-owned matter resource and deterministic mining boundary are implemented and evidenced.
+- `FOCUS-MINING-0002` now authorizes the browser mining interaction and resource-feedback slice.
+- `WI-MINING-0002` is active and prompt-ready for implementation under `FOCUS-MINING-0002`.
 - The game concept is well described by the supplied design summary and lightly corroborated by `README.md`.
 
 ## Evidence Basis
@@ -44,7 +46,7 @@ health: yellow
 
 ## Active Priorities
 - Keep validation aligned with the Velumin-compatible script contract.
-- Preserve the landed matter boundary and select the next explicit Phase 2 work item before expanding into shields, enemies, child-probe behavior, scoring, or progression.
+- Implement `WI-MINING-0002` under `FOCUS-MINING-0002` before expanding into shields, enemies, child-probe behavior, scoring, or progression.
 - Keep the first mining/resource slice narrow, deterministic, and sourced from the Rust simulation model where practical.
 
 ## Risks
@@ -55,6 +57,6 @@ health: yellow
 - The mining slice could drift into production economy, collision, or UI if not kept explicitly scoped.
 
 ## Recommended Next Actions
-1. Select or refine the next explicit Phase 2 work item; no new focus is selected by this closeout.
-2. Keep the matter boundary deterministic and simulation-owned if follow-up browser affordances are proposed.
+1. Implement `WI-MINING-0002` with browser behavior sourced from the Rust matter boundary.
+2. Keep the matter boundary deterministic and simulation-owned.
 3. Keep asteroid collision, shields, enemies, child-probe behavior, scoring, and progression blocked until future explicit work items authorize them.
