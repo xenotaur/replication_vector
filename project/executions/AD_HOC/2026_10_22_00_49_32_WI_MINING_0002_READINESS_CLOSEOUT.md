@@ -2,11 +2,14 @@
 execution_id: 2026_10_22_00_49_32_WI_MINING_0002_READINESS_CLOSEOUT
 prompt_id: PROMPT(AD_HOC:WI_MINING_0002_READINESS_CLOSEOUT)[2026-10-22T00:49:30+00:00]
 work_item: AD_HOC
-status: in_progress
+status: landed
 rerun_of:
 pr: https://github.com/xenotaur/replication_vector/pull/23
 commit: 30f50bbe03f2051d844db39eb3a6571bd3feb95c
+session_transcript: codex-app:01a02a73-73e9-7df0-902c-b8b6e2c0733f
 created_at: 2026-10-22T00:49:32+00:00
+agent: codex_app
+instruction_source: project/work_items/active/WI-MINING-0002.md
 ---
 
 # Summary
