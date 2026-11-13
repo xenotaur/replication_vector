@@ -58,6 +58,24 @@
       gap: 0.65rem;
     }
 
+    #mining-controls {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      display: none;
+      width: min(18rem, calc(100vw - 2rem));
+      padding: 0.75rem;
+      background: rgb(5 7 10 / 0.82);
+      color: #e8fbff;
+      font-size: 0.875rem;
+      line-height: 1.4;
+    }
+
+    body[data-scene="mining"] #mining-controls {
+      display: grid;
+      gap: 0.35rem;
+    }
+
     .tuning-row {
       display: grid;
       grid-template-columns: 7rem 1fr 3rem;
@@ -97,18 +115,27 @@
         <output for="responsiveness" id="responsiveness-value">0.50</output>
       </label>
     </div>
+    <div id="mining-controls" aria-label="Mining controls">
+      <strong>Mining interaction</strong>
+      <span>Space: mine</span>
+      <span>W or ArrowUp: thrust</span>
+      <span>A/D or Left/Right: turn</span>
+    </div>
     <div id="status" role="status" aria-live="polite">loading</div>
   </main>
   <script type="module">
     import init, {
       WebGPU,
       replication_vector_first_scene_frame,
+      replication_vector_mining_command_count,
+      replication_vector_mining_frame,
       replication_vector_parent_probe_sandbox_command_count,
       replication_vector_parent_probe_sandbox_frame,
       replication_vector_replay_command_count,
       replication_vector_replay_frame,
       replication_vector_replay_metadata_json,
       replication_vector_scene_command_count,
+      replication_vector_step_mining_json,
       replication_vector_step_parent_probe_json,
     } from "@pkg/replication_vector.js";
 
@@ -125,7 +152,7 @@
     };
     const params = new URLSearchParams(window.location.search);
     const requestedScene = params.get("scene");
-    const scene = requestedScene === "replay" || requestedScene === "sandbox" ? requestedScene : "first-scene";
+    const scene = ["replay", "sandbox", "mining"].includes(requestedScene) ? requestedScene : "first-scene";
     document.body.dataset.scene = scene;
     const keys = new Set();
     const state = {
@@ -134,6 +161,11 @@
       headingRadians: 0,
       angularVelocityRadiansPerSecond: 0,
       config: null,
+      source: { x: 0.55, y: 0 },
+      sourceMatter: 1,
+      parentMatter: 0,
+      parentCapacity: 1,
+      mining: null,
     };
     const SANDBOX_LIMIT = 1.15;
 
@@ -161,6 +193,13 @@
       if (keys.has("ArrowLeft") || keys.has("KeyA")) turn -= 1;
       if (keys.has("ArrowRight") || keys.has("KeyD")) turn += 1;
       return { thrust, turn };
+    }
+
+    function miningInput() {
+      return {
+        ...sandboxInput(),
+        active: keys.has("Space"),
+      };
     }
 
     function isRangeInput(target) {
@@ -211,6 +250,41 @@
       };
     }
 
+    function renderMining(gpu) {
+      const beamActive = Boolean(state.mining?.beamActive);
+      const commandCount = replication_vector_mining_command_count(beamActive);
+      gpu.renderFrame(
+        replication_vector_mining_frame(
+          state.position.x,
+          state.position.y,
+          state.headingRadians,
+          state.source.x,
+          state.source.y,
+          beamActive,
+        ),
+      );
+      status.textContent = `Velumin rendered ${commandCount} mining commands (${beamActive ? "active" : "idle"})`;
+      window.replicationVectorLastRender = {
+        commandCount,
+        input: miningInput(),
+        mining: structuredClone(state.mining),
+        scene,
+        state: structuredClone(state),
+      };
+      window.replicationVectorMiningTestSetState = (nextState) => {
+        if (nextState.position) Object.assign(state.position, nextState.position);
+        if (nextState.velocity) Object.assign(state.velocity, nextState.velocity);
+        if (nextState.source) Object.assign(state.source, nextState.source);
+        if (nextState.headingRadians !== undefined) state.headingRadians = nextState.headingRadians;
+        if (nextState.angularVelocityRadiansPerSecond !== undefined) {
+          state.angularVelocityRadiansPerSecond = nextState.angularVelocityRadiansPerSecond;
+        }
+        if (nextState.sourceMatter !== undefined) state.sourceMatter = nextState.sourceMatter;
+        if (nextState.parentMatter !== undefined) state.parentMatter = nextState.parentMatter;
+        if (nextState.parentCapacity !== undefined) state.parentCapacity = nextState.parentCapacity;
+      };
+    }
+
     function stepSandbox(deltaSeconds) {
       const input = sandboxInput();
       const sliders = tuning();
@@ -237,6 +311,37 @@
       state.angularVelocityRadiansPerSecond = stepped.angularVelocityRadiansPerSecond;
       state.config = stepped.config;
       wrapSandboxPosition();
+    }
+
+    function stepMining(deltaSeconds) {
+      const input = miningInput();
+      const stepped = JSON.parse(
+        replication_vector_step_mining_json(
+          state.position.x,
+          state.position.y,
+          state.velocity.x,
+          state.velocity.y,
+          state.headingRadians,
+          state.angularVelocityRadiansPerSecond,
+          input.thrust,
+          input.turn,
+          state.source.x,
+          state.source.y,
+          state.sourceMatter,
+          state.parentMatter,
+          state.parentCapacity,
+          input.active,
+          deltaSeconds,
+        ),
+      );
+
+      Object.assign(state.position, stepped.parent.position);
+      Object.assign(state.velocity, stepped.parent.velocity);
+      state.headingRadians = stepped.parent.headingRadians;
+      state.angularVelocityRadiansPerSecond = stepped.parent.angularVelocityRadiansPerSecond;
+      state.sourceMatter = stepped.source.matter;
+      state.parentMatter = stepped.parentMatter;
+      state.mining = stepped;
     }
 
     function wrapSandboxPosition() {
@@ -282,11 +387,49 @@
       window.requestAnimationFrame(frame);
     }
 
+    function runMining(gpu) {
+      const handleKeyDown = (event) => {
+        if (isRangeInput(event.target)) return;
+        if (["ArrowUp", "ArrowLeft", "ArrowRight", "KeyW", "KeyA", "KeyD", "Space"].includes(event.code)) {
+          event.preventDefault();
+          keys.add(event.code);
+        }
+      };
+      window.addEventListener("keydown", handleKeyDown);
+      window.addEventListener("keyup", (event) => keys.delete(event.code));
+      window.addEventListener("blur", () => keys.clear());
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "hidden") keys.clear();
+      });
+
+      let previousTime = performance.now();
+      function frame(now) {
+        stepMining((now - previousTime) / 1000);
+        previousTime = now;
+        renderMining(gpu);
+        window.requestAnimationFrame(frame);
+      }
+
+      state.mining = {
+        active: false,
+        inRange: true,
+        beamActive: false,
+        depleted: false,
+        extractedMatter: 0,
+      };
+      renderMining(gpu);
+      window.requestAnimationFrame(frame);
+    }
+
     async function run() {
       await init();
       const gpu = await WebGPU.create("scene");
       if (scene === "sandbox") {
         runSandbox(gpu);
+        return;
+      }
+      if (scene === "mining") {
+        runMining(gpu);
         return;
       }
       renderOrReport(gpu);

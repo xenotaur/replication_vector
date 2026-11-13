@@ -18,6 +18,7 @@ Run scripts from the repository root.
 | `scripts/render-smoke` | Build the browser baseline, capture the Velumin-rendered scene, and save local inspection artifacts. |
 | `scripts/render-replay-smoke` | Build the browser baseline, capture the deterministic parent-probe replay, and save local inspection artifacts. |
 | `scripts/render-sandbox-smoke` | Build the browser baseline, drive the controllable parent-probe sandbox, and save local inspection artifacts. |
+| `scripts/render-mining-smoke` | Build the browser baseline, drive the browser mining interaction, and save local inspection artifacts. |
 | `scripts/validate` | Run the full canonical validation sequence. |
 
 ## Recommended Workflow
@@ -132,11 +133,37 @@ The JSON metadata includes the latest sandbox state, keyboard input, slider valu
 
 ### Mining and matter simulation
 
-The first mining slice is intentionally Rust-only. Run the ordinary test and validation commands to exercise the deterministic matter transfer boundary:
+Run the opt-in browser mining smoke command to exercise the Rust-owned matter transfer boundary through the Velumin harness:
+
+```sh
+scripts/render-mining-smoke
+```
+
+It saves:
+
+```text
+replication_vector/web/smoke-out/mining.png
+replication_vector/web/smoke-out/mining-active.png
+replication_vector/web/smoke-out/mining.json
+```
+
+The browser route is also available manually after `scripts/baseline` and `npm run dev --prefix replication_vector/web -- --host 127.0.0.1`:
+
+```text
+http://127.0.0.1:5173/?scene=mining
+```
+
+- `Space`: activate mining.
+- `W` or `ArrowUp`: forward thrust.
+- `A`/`D` or `ArrowLeft`/`ArrowRight`: turn.
+
+The smoke metadata records inactive, active in-range, active out-of-range, and depleted-source cases. The mining beam renders only when Rust reports active, in-range mining against a non-depleted source.
+
+The underlying deterministic matter transfer boundary can also be exercised directly:
 
 ```sh
 scripts/test
 lrh validate
 ```
 
-The Rust simulation models one `matter` resource, a range-gated mining input, a source reserve, and parent storage capacity. Active mining transfers at the configured rate for the fixed timestep, then clamps to the remaining source and available parent capacity. Inactive or out-of-range mining transfers nothing. The existing `?scene=sandbox` browser route and `scripts/render-sandbox-smoke` remain available for parent-probe and static-asteroid Velumin inspection; this slice does not add browser mining UI or a new renderer.
+The Rust simulation models one `matter` resource, a range-gated mining input, a source reserve, and parent storage capacity. Active mining transfers at the configured rate for the fixed timestep, then clamps to the remaining source and available parent capacity. Inactive or out-of-range mining transfers nothing. The existing `?scene=sandbox` browser route and `scripts/render-sandbox-smoke` remain available for parent-probe and static-asteroid Velumin inspection; the mining route reuses the same Velumin renderer and does not add collision, economy, or a new renderer.

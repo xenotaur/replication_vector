@@ -7,9 +7,10 @@ use webgpu_vector_lib::{Color, Line, Polyline, StrokeStyle, Vec2, VectorCommand}
 pub mod simulation;
 
 use simulation::{
+    MatterStorage, MiningConfig, MiningInput, MiningSource, ParentProbeMotionConfig,
     ParentProbeMotionInput, ParentProbeReplay, ParentProbeState, ParentProbeTuningSliders, SimVec2,
-    deterministic_parent_probe_replay, parent_probe_motion_config_from_tuning,
-    step_parent_probe_motion_with_tuning,
+    deterministic_parent_probe_replay, parent_probe_motion_config_from_tuning, step_mining,
+    step_parent_probe_motion, step_parent_probe_motion_with_tuning,
 };
 
 const CYAN: Color = Color {
@@ -82,6 +83,17 @@ const SANDBOX_ASTEROID_OUTLINES: [[[f32; 2]; 8]; 2] = [
         [0.38, -0.6],
         [0.54, -0.52],
     ],
+];
+
+const MINING_SOURCE_OUTLINE: [[f32; 2]; 8] = [
+    [-0.18, 0.1],
+    [-0.08, 0.2],
+    [0.1, 0.17],
+    [0.2, 0.03],
+    [0.14, -0.14],
+    [-0.06, -0.2],
+    [-0.2, -0.06],
+    [-0.18, 0.1],
 ];
 
 const SHIELD_ARC: [[f32; 2]; 6] = [
@@ -165,6 +177,45 @@ fn sandbox_scene_for_parent_state(state: ParentProbeState) -> Vec<VectorCommand>
     commands
 }
 
+fn translate_outline(outline: &[[f32; 2]], position: SimVec2) -> Vec<[f32; 2]> {
+    outline
+        .iter()
+        .map(|[x, y]| [x + position.x, y + position.y])
+        .collect()
+}
+
+fn mining_scene_for_state(
+    parent_probe: ParentProbeState,
+    source: MiningSource,
+    active: bool,
+) -> Vec<VectorCommand> {
+    let mut commands = vec![
+        polyline_from_vec(
+            transform_parent_probe_outline(parent_probe),
+            stroke(0.018, CYAN, 1.15),
+        ),
+        polyline_from_vec(
+            translate_outline(&MINING_SOURCE_OUTLINE, source.position),
+            stroke(0.016, AMBER, 1.1),
+        ),
+    ];
+
+    if active {
+        let (sin, cos) = parent_probe.heading_radians.sin_cos();
+        let beam_start = SimVec2::new(
+            parent_probe.position.x + cos * 0.38,
+            parent_probe.position.y + sin * 0.38,
+        );
+        commands.push(line(
+            [beam_start.x, beam_start.y],
+            [source.position.x, source.position.y],
+            stroke(0.012, GREEN, 1.35),
+        ));
+    }
+
+    commands
+}
+
 pub fn first_replication_vector_scene() -> Vec<VectorCommand> {
     vec![
         polyline(&PARENT_PROBE_OUTLINE, stroke(0.018, CYAN, 1.15)),
@@ -181,6 +232,18 @@ pub fn deterministic_parent_probe_replay_scene() -> Vec<VectorCommand> {
 
 pub fn parent_probe_sandbox_scene() -> Vec<VectorCommand> {
     sandbox_scene_for_parent_state(ParentProbeState::default())
+}
+
+pub fn mining_scene_command_count(active: bool) -> usize {
+    mining_scene_for_state(
+        ParentProbeState::default(),
+        MiningSource {
+            position: SimVec2::new(0.55, 0.0),
+            matter: 1.0,
+        },
+        active,
+    )
+    .len()
 }
 
 pub fn first_replication_vector_scene_command_count() -> usize {
@@ -257,6 +320,58 @@ pub fn replication_vector_step_parent_probe_json(
     parent_probe_sandbox_step_json(state, config)
 }
 
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
+pub fn replication_vector_mining_command_count(active: bool) -> u32 {
+    mining_scene_command_count(active) as u32
+}
+
+#[cfg_attr(target_arch = "wasm32", wasm_bindgen)]
+#[allow(clippy::too_many_arguments)]
+pub fn replication_vector_step_mining_json(
+    position_x: f32,
+    position_y: f32,
+    velocity_x: f32,
+    velocity_y: f32,
+    heading_radians: f32,
+    angular_velocity_radians_per_second: f32,
+    thrust: f32,
+    turn: f32,
+    source_x: f32,
+    source_y: f32,
+    source_matter: f32,
+    parent_matter: f32,
+    parent_capacity: f32,
+    active: bool,
+    delta_seconds: f32,
+) -> String {
+    let parent_probe = step_parent_probe_motion(
+        ParentProbeState {
+            position: SimVec2::new(position_x, position_y),
+            velocity: SimVec2::new(velocity_x, velocity_y),
+            heading_radians,
+            angular_velocity_radians_per_second,
+        },
+        ParentProbeMotionInput { thrust, turn },
+        ParentProbeMotionConfig::default(),
+        delta_seconds,
+    );
+    let mut source = MiningSource {
+        position: SimVec2::new(source_x, source_y),
+        matter: source_matter,
+    };
+    let mut storage = MatterStorage::new(parent_matter, parent_capacity);
+    let result = step_mining(
+        parent_probe,
+        MiningInput { active },
+        &mut source,
+        &mut storage,
+        MiningConfig::default(),
+        delta_seconds,
+    );
+
+    mining_step_json(parent_probe, source, storage, result)
+}
+
 #[cfg(target_arch = "wasm32")]
 #[wasm_bindgen]
 pub fn replication_vector_first_scene_frame() -> Result<VectorFrame, JsValue> {
@@ -282,6 +397,31 @@ pub fn replication_vector_parent_probe_sandbox_frame(
         heading_radians,
         angular_velocity_radians_per_second: 0.0,
     }))
+}
+
+#[cfg(target_arch = "wasm32")]
+#[wasm_bindgen]
+pub fn replication_vector_mining_frame(
+    position_x: f32,
+    position_y: f32,
+    heading_radians: f32,
+    source_x: f32,
+    source_y: f32,
+    active: bool,
+) -> Result<VectorFrame, JsValue> {
+    vector_frame_from_commands(mining_scene_for_state(
+        ParentProbeState {
+            position: SimVec2::new(position_x, position_y),
+            velocity: SimVec2::ZERO,
+            heading_radians,
+            angular_velocity_radians_per_second: 0.0,
+        },
+        MiningSource {
+            position: SimVec2::new(source_x, source_y),
+            matter: 1.0,
+        },
+        active,
+    ))
 }
 
 #[cfg(target_arch = "wasm32")]
@@ -331,6 +471,49 @@ fn parent_probe_sandbox_step_json(
         config.angular_drag,
         config.max_speed,
         config.max_angular_speed,
+    )
+}
+
+fn mining_step_json(
+    parent_probe: ParentProbeState,
+    source: MiningSource,
+    storage: MatterStorage,
+    result: simulation::MiningStepResult,
+) -> String {
+    let beam_active = result.active && result.in_range && source.matter > f32::EPSILON;
+    format!(
+        concat!(
+            "{{",
+            "\"parent\":{{\"position\":{{\"x\":{:.8},\"y\":{:.8}}},",
+            "\"velocity\":{{\"x\":{:.8},\"y\":{:.8}}},",
+            "\"headingRadians\":{:.8},",
+            "\"angularVelocityRadiansPerSecond\":{:.8}}},",
+            "\"source\":{{\"position\":{{\"x\":{:.8},\"y\":{:.8}}},\"matter\":{:.8}}},",
+            "\"parentMatter\":{:.8},",
+            "\"parentCapacity\":{:.8},",
+            "\"active\":{},",
+            "\"inRange\":{},",
+            "\"beamActive\":{},",
+            "\"depleted\":{},",
+            "\"extractedMatter\":{:.8}",
+            "}}"
+        ),
+        parent_probe.position.x,
+        parent_probe.position.y,
+        parent_probe.velocity.x,
+        parent_probe.velocity.y,
+        parent_probe.heading_radians,
+        parent_probe.angular_velocity_radians_per_second,
+        source.position.x,
+        source.position.y,
+        source.matter,
+        storage.amount,
+        storage.capacity,
+        result.active,
+        result.in_range,
+        beam_active,
+        source.matter <= f32::EPSILON,
+        result.extracted_matter,
     )
 }
 
@@ -527,5 +710,41 @@ mod tests {
         assert!(json.contains("\"velocity\""));
         assert!(json.contains("\"thrustAcceleration\":0.50000000"));
         assert!(json.contains("\"maxSpeed\":1.50000000"));
+    }
+
+    #[test]
+    fn mining_scene_adds_beam_only_for_active_input() {
+        let inactive = mining_scene_for_state(
+            ParentProbeState::default(),
+            MiningSource {
+                position: SimVec2::new(0.55, 0.0),
+                matter: 1.0,
+            },
+            false,
+        );
+        let active = mining_scene_for_state(
+            ParentProbeState::default(),
+            MiningSource {
+                position: SimVec2::new(0.55, 0.0),
+                matter: 1.0,
+            },
+            true,
+        );
+
+        assert_eq!(inactive.len(), 2);
+        assert_eq!(active.len(), 3);
+        assert!(matches!(active[2], VectorCommand::Line(_)));
+    }
+
+    #[test]
+    fn mining_step_json_reports_rust_boundary_state() {
+        let json = replication_vector_step_mining_json(
+            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.55, 0.0, 1.0, 0.0, 1.0, true, 0.2,
+        );
+
+        assert!(json.contains("\"active\":true"));
+        assert!(json.contains("\"inRange\":true"));
+        assert!(json.contains("\"beamActive\":true"));
+        assert!(json.contains("\"extractedMatter\":0.10000000"));
     }
 }
