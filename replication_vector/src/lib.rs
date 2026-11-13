@@ -41,6 +41,8 @@ const BLUE: Color = Color {
     alpha: 1.0,
 };
 
+const MAX_BROWSER_DELTA_SECONDS: f32 = 0.05;
+
 const PARENT_PROBE_OUTLINE: [[f32; 2]; 7] = [
     [-0.32, 0.0],
     [0.18, 0.24],
@@ -344,6 +346,7 @@ pub fn replication_vector_step_mining_json(
     active: bool,
     delta_seconds: f32,
 ) -> String {
+    let delta_seconds = delta_seconds.clamp(0.0, MAX_BROWSER_DELTA_SECONDS);
     let parent_probe = step_parent_probe_motion(
         ParentProbeState {
             position: SimVec2::new(position_x, position_y),
@@ -745,6 +748,15 @@ mod tests {
         assert!(json.contains("\"active\":true"));
         assert!(json.contains("\"inRange\":true"));
         assert!(json.contains("\"beamActive\":true"));
-        assert!(json.contains("\"extractedMatter\":0.10000000"));
+        assert!(json.contains("\"extractedMatter\":0.02500000"));
+    }
+
+    #[test]
+    fn mining_step_json_bounds_large_browser_delta() {
+        let json = replication_vector_step_mining_json(
+            0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.55, 0.0, 1.0, 0.0, 1.0, true, 5.0,
+        );
+
+        assert!(json.contains("\"extractedMatter\":0.02500000"));
     }
 }
