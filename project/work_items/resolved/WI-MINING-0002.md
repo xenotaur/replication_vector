@@ -2,13 +2,13 @@
 id: WI-MINING-0002
 title: Add browser mining interaction and resource feedback
 type: deliverable
-status: active
+status: resolved
 priority: high
 owner: project maintainers
 created: 2026-09-26
 blocked: false
 blocked_reason: null
-resolution: null
+resolution: "Implemented and merged the Rust-backed browser mining interaction with Velumin source and beam rendering, browser smoke evidence, and preserved static/replay/sandbox paths."
 related_focus:
   - FOCUS-MINING-0002
 related_roadmap:

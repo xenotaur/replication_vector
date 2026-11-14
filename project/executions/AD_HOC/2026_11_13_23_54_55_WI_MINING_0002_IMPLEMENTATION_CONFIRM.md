@@ -2,10 +2,10 @@
 execution_id: 2026_11_13_23_54_55_WI_MINING_0002_IMPLEMENTATION_CONFIRM
 prompt_id: PROMPT(AD_HOC:WI_MINING_0002_IMPLEMENTATION_CONFIRM)[2026-11-13T23:54:51+00:00]
 work_item: AD_HOC
-status: in_progress
+status: landed
 rerun_of: 2026_11_13_16_55_07_WI_MINING_0002
 pr: https://github.com/xenotaur/replication_vector/pull/24
-commit:
+commit: ec63a4549e86aa7d4041e7df326956b4e06bad23
 agent: codex_app
 instruction_source: https://github.com/xenotaur/replication_vector/pull/24
 session_transcript: codex-app:01a02a73-73e9-7df0-902c-b8b6e2c0733f
