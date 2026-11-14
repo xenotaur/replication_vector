@@ -139,6 +139,8 @@ impl Default for MiningConfig {
 
 #[derive(Clone, Copy, Debug, Default, PartialEq)]
 pub struct MiningStepResult {
+    pub active: bool,
+    pub in_range: bool,
     pub extracted_matter: f32,
     pub source_matter_remaining: f32,
     pub parent_matter: f32,
@@ -281,6 +283,8 @@ pub fn step_mining(
     parent_matter.amount = (parent_matter.amount + extracted_matter).min(parent_matter.capacity);
 
     MiningStepResult {
+        active: input.active,
+        in_range,
         extracted_matter,
         source_matter_remaining: source.matter,
         parent_matter: parent_matter.amount,
@@ -697,6 +701,8 @@ mod tests {
             0.2,
         );
 
+        assert!(result.active);
+        assert!(result.in_range);
         assert_close(result.extracted_matter, 0.1);
         assert_close(source.matter, 1.9);
         assert_close(parent_matter.amount, 0.1);
@@ -718,6 +724,8 @@ mod tests {
             MiningConfig::default(),
             1.0,
         );
+        assert!(!inactive.active);
+        assert!(inactive.in_range);
         assert_eq!(inactive.extracted_matter, 0.0);
 
         source.position = SimVec2::new(0.76, 0.0);
@@ -729,6 +737,8 @@ mod tests {
             MiningConfig::default(),
             1.0,
         );
+        assert!(out_of_range.active);
+        assert!(!out_of_range.in_range);
         assert_eq!(out_of_range.extracted_matter, 0.0);
         assert_close(source.matter, 2.0);
         assert_close(parent_matter.amount, 0.0);

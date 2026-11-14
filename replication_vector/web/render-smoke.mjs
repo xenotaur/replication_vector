@@ -7,7 +7,7 @@ import { chromium } from "playwright";
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(HERE, "../..");
 const OUT = resolve(HERE, "smoke-out");
-const SCENES = new Set(["first-scene", "replay", "sandbox"]);
+const SCENES = new Set(["first-scene", "replay", "sandbox", "mining"]);
 const SCENE = SCENES.has(process.env.SMOKE_SCENE) ? process.env.SMOKE_SCENE : "first-scene";
 const ARTIFACT = resolve(OUT, `${SCENE}.png`);
 const METADATA = resolve(OUT, `${SCENE}.json`);
@@ -19,6 +19,7 @@ const READY_TEXTS = {
   "first-scene": "Velumin rendered 4 scene commands",
   replay: "Velumin rendered 4 replay commands",
   sandbox: "Velumin rendered 3 sandbox commands",
+  mining: "Velumin rendered 2 mining commands (idle)",
 };
 const READY_TEXT = READY_TEXTS[SCENE];
 const READY_TIMEOUT_MS = 15000;
@@ -113,6 +114,7 @@ async function capture(browser) {
     if (SCENE === "sandbox") {
       await driveSandbox(page);
     }
+    const miningCases = SCENE === "mining" ? await driveMining(page) : null;
 
     await mkdir(OUT, { recursive: true });
     await page.locator("#scene").screenshot({ path: ARTIFACT });
@@ -124,6 +126,7 @@ async function capture(browser) {
 
     const metadata = {
       artifact: ARTIFACT,
+      cases: miningCases,
       commandCount: render.commandCount,
       input: render.input,
       replay: render.replay,
@@ -219,6 +222,63 @@ async function driveSandbox(page) {
     const render = window.replicationVectorLastRender;
     return render?.state?.position?.x < -1.0;
   });
+}
+
+async function miningSnapshot(page) {
+  return page.evaluate(() => window.replicationVectorLastRender?.mining);
+}
+
+async function driveMining(page) {
+  const cases = [];
+  cases.push({ name: "initial-inactive", state: await miningSnapshot(page) });
+
+  await page.keyboard.down("Space");
+  await page.waitForFunction(() => {
+    const render = window.replicationVectorLastRender;
+    return render?.mining?.active && render.mining.inRange && render.mining.beamActive && render.mining.extractedMatter > 0;
+  });
+  const activeArtifact = resolve(OUT, "mining-active.png");
+  await page.locator("#scene").screenshot({ path: activeArtifact });
+  cases.push({ name: "active-in-range", artifact: activeArtifact, state: await miningSnapshot(page) });
+
+  await page.keyboard.up("Space");
+  await page.waitForFunction(() => {
+    const mining = window.replicationVectorLastRender?.mining;
+    return mining && !mining.active && mining.extractedMatter === 0;
+  });
+  cases.push({ name: "inactive", state: await miningSnapshot(page) });
+
+  await page.evaluate(() => {
+    window.replicationVectorMiningTestSetState?.({
+      position: { x: 1.4, y: 0 },
+      sourceMatter: 0.5,
+      parentMatter: 0,
+    });
+  });
+  await page.keyboard.down("Space");
+  await page.waitForFunction(() => {
+    const mining = window.replicationVectorLastRender?.mining;
+    return mining?.active && !mining.inRange && !mining.beamActive && mining.extractedMatter === 0;
+  });
+  cases.push({ name: "active-out-of-range", state: await miningSnapshot(page) });
+
+  await page.keyboard.up("Space");
+  await page.evaluate(() => {
+    window.replicationVectorMiningTestSetState?.({
+      position: { x: 0, y: 0 },
+      sourceMatter: 0,
+      parentMatter: 0,
+    });
+  });
+  await page.keyboard.down("Space");
+  await page.waitForFunction(() => {
+    const mining = window.replicationVectorLastRender?.mining;
+    return mining?.active && mining.inRange && mining.depleted && !mining.beamActive && mining.extractedMatter === 0;
+  });
+  cases.push({ name: "depleted-source", state: await miningSnapshot(page) });
+  await page.keyboard.up("Space");
+
+  return cases;
 }
 
 async function launchBrowser() {
